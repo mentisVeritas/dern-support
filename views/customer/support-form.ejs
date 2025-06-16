@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yangi Yordam So‘rovi - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="support-form-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Yangi Yordam So‘rovi</h1>
+        <a href="/customer/dashboard" class="btn btn-secondary btn-sm">Boshqaruvga qaytish</a>
+      </div>
+      
+      <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-error">
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <div class="form-container">
+        <form action="/customer/support" method="POST" class="support-form">
+          <div class="form-section">
+            <h2>Muammo Tafsilotlari</h2>
+            
+            <div class="form-group">
+              <label for="title">Muammo sarlavhasi</label>
+              <input 
+                type="text" 
+                id="title" 
+                name="title" 
+                required 
+                placeholder="Muammoga qisqacha ta'rif"
+                value="<%= typeof title !== 'undefined' ? title : '' %>"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="description">Batafsil Tavsif</label>
+              <textarea 
+                id="description" 
+                name="description" 
+                rows="5" 
+                required 
+                placeholder="Muammo haqida iloji boricha batafsil ma’lumot bering"
+              ><%= typeof description !== 'undefined' ? description : '' %></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="deviceType">Qurilma Turi</label>
+                <select id="deviceType" name="deviceType" required>
+                  <option value="" disabled <%= typeof deviceType === 'undefined' ? 'selected' : '' %>>Qurilma turini tanlang</option>
+                  <option value="desktop" <%= deviceType === 'desktop' ? 'selected' : '' %>>Stol kompyuteri</option>
+                  <option value="laptop" <%= deviceType === 'laptop' ? 'selected' : '' %>>Noutbuk</option>
+                  <option value="tablet" <%= deviceType === 'tablet' ? 'selected' : '' %>>Planshet</option>
+                  <option value="smartphone" <%= deviceType === 'smartphone' ? 'selected' : '' %>>Smartfon</option>
+                  <option value="printer" <%= deviceType === 'printer' ? 'selected' : '' %>>Printer</option>
+                  <option value="server" <%= deviceType === 'server' ? 'selected' : '' %>>Server</option>
+                  <option value="network" <%= deviceType === 'network' ? 'selected' : '' %>>Tarmoq uskunalari</option>
+                  <option value="other" <%= deviceType === 'other' ? 'selected' : '' %>>Boshqa</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="urgency">Shoshilinchlik Darajasi</label>
+                <select id="urgency" name="urgency" required>
+                  <option value="" disabled <%= typeof urgency === 'undefined' ? 'selected' : '' %>>Darajani tanlang</option>
+                  <option value="low" <%= urgency === 'low' ? 'selected' : '' %>>Past - Shoshilinch emas</option>
+                  <option value="medium" <%= urgency === 'medium' ? 'selected' : '' %>>O‘rtacha - Ishga ta’sir qiladi</option>
+                  <option value="high" <%= urgency === 'high' ? 'selected' : '' %>>Yuqori - Jiddiy muammo</option>
+                  <option value="critical" <%= urgency === 'critical' ? 'selected' : '' %>>Jiddiy - Tizim ishdan chiqqan</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="location">Joylashuv</label>
+              <input 
+                type="text" 
+                id="location" 
+                name="location" 
+                placeholder="Qurilma qayerda joylashgan? (Shahar, Viloyat)"
+                value="<%= typeof location !== 'undefined' ? location : '' %>"
+              >
+            </div>
+          </div>
+          
+          <div class="form-section cost-estimate" id="costEstimateSection">
+            <h2>Taxminiy Narx</h2>
+            <p class="note">Qurilma turi va shoshilinchlik darajasiga ko‘ra taxminiy narx ko‘rsatiladi.</p>
+            <div class="cost-display" id="costDisplay">
+              <span class="currency">$</span>
+              <span class="amount">0.00</span>
+            </div>
+            <p class="cost-note">Bu faqat taxminiy narx. Yakuniy narx qismlar va mehnat xarajatlariga qarab o‘zgaradi.</p>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-block">Yordam So‘rovini Yuborish</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const deviceTypeSelect = document.getElementById('deviceType');
+      const urgencySelect = document.getElementById('urgency');
+      const costDisplay = document.getElementById('costDisplay').querySelector('.amount');
+      
+      const baseRates = {
+        'desktop': 75,
+        'laptop': 85,
+        'tablet': 65,
+        'smartphone': 60,
+        'printer': 70,
+        'server': 150,
+        'network': 100,
+        'other': 80
+      };
+      
+      const urgencyMultipliers = {
+        'low': 1,
+        'medium': 1.25,
+        'high': 1.5,
+        'critical': 2
+      };
+      
+      function updateCostEstimate() {
+        const deviceType = deviceTypeSelect.value;
+        const urgency = urgencySelect.value;
+        
+        if (deviceType && urgency) {
+          const baseRate = baseRates[deviceType] || 80;
+          const multiplier = urgencyMultipliers[urgency] || 1;
+          const estimatedCost = baseRate * multiplier;
+          
+          costDisplay.textContent = estimatedCost.toFixed(2);
+        } else {
+          costDisplay.textContent = '0.00';
+        }
+      }
+      
+      deviceTypeSelect.addEventListener('change', updateCostEstimate);
+      urgencySelect.addEventListener('change', updateCostEstimate);
+      updateCostEstimate();
+    });
+  </script>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

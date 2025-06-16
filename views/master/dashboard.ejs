@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Dern Yordam</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/master-header', { currentPage: 'dashboard' }) %>
+    
+    <div class="dashboard-content">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Bosh Administrator Paneli</h1>
+            <div class="text-muted">
+                <small>Tizim Umumiy Ko'rinishi</small>
+            </div>
+        </div>
+
+        <!-- Statistika Kartalari -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4><%= totalRequests || 0 %></h4>
+                                <p>Jami So'rovlar</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-headset fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4><%= pendingApprovalCount || 0 %></h4>
+                                <p>Tasdiqlash Kutilmoqda</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4><%= totalUsers || 0 %></h4>
+                                <p>Jami Foydalanuvchilar</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4><%= totalKnowledgeArticles || 0 %></h4>
+                                <p>Bilim Maqolalari</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-book fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Foydalanuvchi Statistikasi -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6>Mijozlar</h6>
+                        <h3 class="text-primary"><%= totalCustomers || 0 %></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6>Administratorlar</h6>
+                        <h3 class="text-success"><%= totalAdmins || 0 %></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6>Bosh Administratorlar</h6>
+                        <h3 class="text-warning"><%= totalMasters || 0 %></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6>Kam Qolgan Qismlar</h6>
+                        <h3 class="text-danger"><%= (lowStockParts && lowStockParts.length) || 0 %></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- So'rov Holati Ko'rinishi -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>So'rov Holati Ko'rinishi</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <h4 class="text-info"><%= pendingRequestsCount || 0 %></h4>
+                                    <small>Kutilmoqda</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <h4 class="text-warning"><%= inProgressRequestsCount || 0 %></h4>
+                                    <small>Jarayonda</small>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <h4 class="text-success"><%= resolvedRequestsCount || 0 %></h4>
+                                    <small>Hal Qilingan</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="progress" style="height: 30px;">
+                                    <% 
+                                    const total = (pendingRequestsCount || 0) + (inProgressRequestsCount || 0) + (resolvedRequestsCount || 0);
+                                    const pendingPercent = total > 0 ? ((pendingRequestsCount || 0) / total * 100) : 0;
+                                    const progressPercent = total > 0 ? ((inProgressRequestsCount || 0) / total * 100) : 0;
+                                    const resolvedPercent = total > 0 ? ((resolvedRequestsCount || 0) / total * 100) : 0;
+                                    %>
+                                    <div class="progress-bar bg-info" style="width: <%= pendingPercent %>%"></div>
+                                    <div class="progress-bar bg-warning" style="width: <%= progressPercent %>%"></div>
+                                    <div class="progress-bar bg-success" style="width: <%= resolvedPercent %>%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasdiqlash Kutayotgan So'rovlar -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Bosh Administrator Tasdiqlashini Kutayotgan So'rovlar</h5>
+                        <a href="/master/support?approvalStatus=pending_approval" class="btn btn-primary btn-sm">Barchasini Ko'rish</a>
+                    </div>
+                    <div class="card-body">
+                        <% if (!pendingApprovalRequests || pendingApprovalRequests.length === 0) { %>
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                                <p>Tasdiqlash kutayotgan so'rovlar yo'q.</p>
+                                <small>Barcha so'rovlar ko'rib chiqilgan.</small>
+                            </div>
+                        <% } else { %>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>So'rov ID</th>
+                                            <th>Mijoz</th>
+                                            <th>Sarlavha</th>
+                                            <th>Qurilma Turi</th>
+                                            <th>Muhimlik</th>
+                                            <th>Yaratilgan</th>
+                                            <th>Harakat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% pendingApprovalRequests.forEach(request => { %>
+                                            <tr>
+                                                <td><code><%= request._id.toString().slice(-6) %></code></td>
+                                                <td>
+                                                    <% if (request.customer) { %>
+                                                        <%= request.customer.firstName %> <%= request.customer.lastName %>
+                                                    <% } else if (request.guestName) { %>
+                                                        <%= request.guestName %> <span class="badge badge-secondary badge-sm">Mehmon</span>
+                                                    <% } else { %>
+                                                        <span class="text-muted">Noma'lum Foydalanuvchi</span>
+                                                    <% } %>
+                                                </td>
+                                                <td><%= request.title %></td>
+                                                <td><span class="badge badge-info"><%= request.deviceType %></span></td>
+                                                <td>
+                                                    <span class="badge badge-<%= request.urgency === 'critical' ? 'danger' : request.urgency === 'high' ? 'warning' : request.urgency === 'medium' ? 'info' : 'secondary' %>">
+                                                        <%= request.urgency === 'critical' ? 'Juda Muhim' : request.urgency === 'high' ? 'Muhim' : request.urgency === 'medium' ? 'O\'rtacha' : 'Past' %>
+                                                    </span>
+                                                </td>
+                                                <td><%= new Date(request.createdAt).toLocaleDateString('uz-UZ') %></td>
+                                                <td>
+                                                    <a href="/master/support/<%= request._id %>" class="btn btn-sm btn-outline-primary">Ko'rib Chiqish</a>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- So'nggi Faollik -->
+        <% if (allSupportRequests && allSupportRequests.length > 0) { %>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>So'nggi Yordam So'rovlari</h5>
+                            <a href="/master/support" class="btn btn-outline-primary btn-sm">Barchasini Ko'rish</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Mijoz</th>
+                                            <th>Sarlavha</th>
+                                            <th>Holat</th>
+                                            <th>Yaratilgan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% allSupportRequests.slice(0, 5).forEach(request => { %>
+                                            <tr>
+                                                <td><code><%= request._id.toString().slice(-6) %></code></td>
+                                                <td>
+                                                    <% if (request.customer) { %>
+                                                        <%= request.customer.firstName %> <%= request.customer.lastName %>
+                                                    <% } else if (request.guestName) { %>
+                                                        <%= request.guestName %> <span class="badge badge-secondary badge-sm">Mehmon</span>
+                                                    <% } else { %>
+                                                        <span class="text-muted">Noma'lum</span>
+                                                    <% } %>
+                                                </td>
+                                                <td><%= request.title %></td>
+                                                <td>
+                                                    <span class="badge badge-<%= request.status === 'resolved' ? 'success' : request.status === 'in-progress' ? 'warning' : request.status === 'pending' ? 'info' : 'secondary' %>">
+                                                        <%= request.status === 'resolved' ? 'Hal Qilingan' : request.status === 'in-progress' ? 'Jarayonda' : request.status === 'pending' ? 'Kutilmoqda' : request.status %>
+                                                    </span>
+                                                </td>
+                                                <td><%= new Date(request.createdAt).toLocaleDateString('uz-UZ') %></td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <%- include('../partials/master-footer') %>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

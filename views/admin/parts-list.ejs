@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ehtiyot Qismlar - Dern-Yordam Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/admin-header', { currentPage: 'parts' }) %>
+  
+  <div class="dashboard-content">
+    <div class="page-header">
+      <h1>Ehtiyot Qismlar Inventari</h1>
+      <p class="text-muted">Ehtiyot qismlar inventariga faqat ko‘rish uchun ruxsat</p>
+    </div>
+    
+    <div class="filters-container">
+      <form action="/admin/parts" method="GET" class="filters-form">
+        <div class="filter-group">
+          <label for="category">Kategoriya</label>
+          <select id="category" name="category">
+            <option value="">Barcha Kategoriyalar</option>
+            <option value="hardware" <%= filters && filters.category === 'hardware' ? 'selected' : '' %>>Uskuna</option>
+            <option value="software" <%= filters && filters.category === 'software' ? 'selected' : '' %>>Dasturiy Ta'minot</option>
+            <option value="accessories" <%= filters && filters.category === 'accessories' ? 'selected' : '' %>>Aksessuarlar</option>
+            <option value="cables" <%= filters && filters.category === 'cables' ? 'selected' : '' %>>Kabellar</option>
+            <option value="components" <%= filters && filters.category === 'components' ? 'selected' : '' %>>Komponentlar</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="lowStock">Zahira Darajasi</label>
+          <select id="lowStock" name="lowStock">
+            <option value="">Barcha Zahira Darajalari</option>
+            <option value="true" <%= filters && filters.lowStock === 'true' ? 'selected' : '' %>>Faqat Kam Zahira</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-sm">Filtrlarni Qo‘llash</button>
+        <a href="/admin/parts" class="btn btn-secondary btn-sm">Filtrlarni Tozalash</a>
+      </form>
+    </div>
+    
+    <div class="parts-container">
+      <% if (spareParts.length === 0) { %>
+        <div class="empty-state">
+          <h2>Hech qanday ehtiyot qism topilmadi</h2>
+          <p>Joriy filtrlaringizga mos keladigan ehtiyot qismlar mavjud emas.</p>
+        </div>
+      <% } else { %>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Nomi</th>
+                <th>Kategoriya</th>
+                <th>Zahira</th>
+                <th>Narx</th>
+                <th>Ta'minotchi</th>
+                <th>Joylashuvi</th>
+                <th>Mos Qurilmalar</th>
+                <th>Holati</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% spareParts.forEach(part => { %>
+                <tr class="<%= part.stockQuantity <= part.minimumStockLevel ? 'table-warning' : '' %>">
+                  <td>
+                    <strong><%= part.name %></strong>
+                    <br>
+                    <small class="text-muted"><%= part.description %></small>
+                  </td>
+                  <td>
+                    <span class="badge badge-secondary">
+                      <%= part.category === 'hardware' ? 'Uskuna' :
+                          part.category === 'software' ? 'Dasturiy Ta\'minot' :
+                          part.category === 'accessories' ? 'Aksessuarlar' :
+                          part.category === 'cables' ? 'Kabellar' :
+                          part.category === 'components' ? 'Komponentlar' : part.category %>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="<%= part.stockQuantity <= part.minimumStockLevel ? 'text-danger' : 'text-success' %>">
+                      <%= part.stockQuantity %>
+                    </span>
+                    <small class="text-muted">/ <%= part.minimumStockLevel %> min</small>
+                  </td>
+                  <td>$<%= part.price.toFixed(2) %></td>
+                  <td>
+                    <% if (part.supplier && part.supplier.name) { %>
+                      <%= part.supplier.name %>
+                    <% } else { %>
+                      Mavjud emas
+                    <% } %>
+                  </td>
+                  <td><%= part.location || 'Mavjud emas' %></td>
+                  <td>
+                    <% if (part.compatibleDevices && part.compatibleDevices.length > 0) { %>
+                      <% part.compatibleDevices.slice(0, 2).forEach(device => { %>
+                        <span class="badge badge-light">
+                          <%= device === 'desktop' ? 'Ish stoli kompyuteri' :
+                              device === 'laptop' ? 'Noutbuk' :
+                              device === 'tablet' ? 'Planshet' :
+                              device === 'smartphone' ? 'Smartfon' :
+                              device === 'printer' ? 'Printer' :
+                              device === 'server' ? 'Server' :
+                              device === 'network' ? 'Tarmoq' :
+                              device === 'other' ? 'Boshqa' : device %>
+                        </span>
+                      <% }) %>
+                      <% if (part.compatibleDevices.length > 2) { %>
+                        <small class="text-muted">+<%= part.compatibleDevices.length - 2 %> ta ko‘proq</small>
+                      <% } %>
+                    <% } else { %>
+                      Mavjud emas
+                    <% } %>
+                  </td>
+                  <td>
+                    <span class="badge badge-<%= part.isActive ? 'success' : 'danger' %>">
+                      <%= part.isActive ? 'Faol' : 'Faol emas' %>
+                    </span>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+  </div>
+  
+  <%- include('../partials/admin-footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

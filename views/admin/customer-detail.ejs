@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mijoz Ma'lumotlari - Dern-Yordam Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/admin-header', { currentPage: 'customers' }) %>
+  
+  <div class="dashboard-content">
+    <div class="page-header">
+      <h1>Mijoz Ma'lumotlari</h1>
+      <a href="/admin/customers" class="btn btn-secondary btn-sm">Mijozlarga Qaytish</a>
+    </div>
+    
+    <div class="customer-detail-container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h3>Mijoz Haqida Ma'lumot</h3>
+            </div>
+            <div class="card-body">
+              <div class="customer-info">
+                <div class="info-item">
+                  <strong>Ism:</strong> <%= customer.firstName %> <%= customer.lastName %>
+                </div>
+                <div class="info-item">
+                  <strong>Email:</strong> <%= customer.email %>
+                </div>
+                <div class="info-item">
+                  <strong>Telefon:</strong> <%= customer.phone || 'Mavjud emas' %>
+                </div>
+                <div class="info-item">
+                  <strong>Hisob Turi:</strong> 
+                  <span class="badge badge-<%= customer.accountType === 'business' ? 'primary' : 'secondary' %>">
+                    <%= customer.accountType === 'business' ? 'Biznes' : 'Shaxsiy' %>
+                  </span>
+                </div>
+                <% if (customer.businessName) { %>
+                  <div class="info-item">
+                    <strong>Biznes Nomi:</strong> <%= customer.businessName %>
+                  </div>
+                <% } %>
+                <div class="info-item">
+                  <strong>Ro‘yxatdan o‘tgan:</strong> <%= new Date(customer.createdAt).toLocaleDateString('uz-UZ') %>
+                </div>
+              </div>
+              
+              <% if (customer.address) { %>
+                <div class="address-section mt-3">
+                  <h4>Manzil</h4>
+                  <div class="address-info">
+                    <% if (customer.address.street) { %>
+                      <div><%= customer.address.street %></div>
+                    <% } %>
+                    <% if (customer.address.city || customer.address.state || customer.address.zipCode) { %>
+                      <div>
+                        <%= customer.address.city %><% if (customer.address.city && customer.address.state) { %>, <% } %><%= customer.address.state %> <%= customer.address.zipCode %>
+                      </div>
+                    <% } %>
+                    <% if (customer.address.country) { %>
+                      <div><%= customer.address.country %></div>
+                    <% } %>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h3>Yordam So‘rovlari</h3>
+            </div>
+            <div class="card-body">
+              <% if (supportRequests.length === 0) { %>
+                <p>Ushbu mijoz uchun yordam so‘rovlari topilmadi.</p>
+              <% } else { %>
+                <div class="support-requests-list">
+                  <% supportRequests.forEach(request => { %>
+                    <div class="support-request-item">
+                      <div class="request-header">
+                        <h5><a href="/admin/support/<%= request._id %>"><%= request.title %></a></h5>
+                        <span class="badge badge-<%= request.status === 'resolved' ? 'success' : request.status === 'in-progress' ? 'warning' : 'info' %>">
+                          <%= request.status === 'resolved' ? 'Hal qilingan' : request.status === 'in-progress' ? 'Jarayonda' : 'Yangi' %>
+                        </span>
+                      </div>
+                      <div class="request-meta">
+                        <small class="text-muted">
+                          <%= request.deviceType %> • <%= request.urgency %> • <%= new Date(request.createdAt).toLocaleDateString('uz-UZ') %>
+                        </small>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%- include('../partials/admin-footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

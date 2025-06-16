@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yordam So‘rovi Tafsilotlari - Dern-Yordam Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/admin-header', { currentPage: 'support' }) %>
+  
+  <div class="dashboard-content">
+    <div class="page-header">
+      <h1>Yordam So‘rovi Tafsilotlari</h1>
+      <a href="/admin/support" class="btn btn-secondary btn-sm">Yordam So‘rovlariga Qaytish</a>
+    </div>
+      
+    <div class="support-detail-container">
+      <div class="support-header">
+        <h2><%= supportRequest.title || supportRequest.requestType || 'Yordam So‘rovi' %></h2>
+        <div class="support-meta">
+          <span class="status <%= supportRequest.status %>">
+            <%= supportRequest.status === 'resolved' ? 'Hal Qilingan' :
+                supportRequest.status === 'in-progress' ? 'Jarayonda' :
+                supportRequest.status === 'pending' ? 'Kutilmoqda' : 
+                supportRequest.status.charAt(0).toUpperCase() + supportRequest.status.slice(1) %>
+          </span>
+          <span class="created-date">
+            Yaratilgan: <%= new Date(supportRequest.createdAt).toLocaleDateString('uz-UZ') %>
+          </span>
+          <% if (supportRequest.isGuestRequest) { %>
+            <span class="badge badge-info">Mehmon So‘rovi</span>
+          <% } %>
+        </div>
+      </div>
+      
+      <div class="support-details">
+        <div class="detail-section">
+          <h3>Mijoz Ma'lumotlari</h3>
+          <div class="customer-details">
+            <% if (supportRequest.isGuestRequest) { %>
+              <!-- Mehmon So‘rovi Ma'lumotlari -->
+              <div class="customer-name">
+                <strong>Ism:</strong> <%= supportRequest.guestName || 'Mehmon Foydalanuvchi' %>
+              </div>
+              <div class="customer-email">
+                <strong>Email:</strong> <%= supportRequest.guestEmail %>
+              </div>
+              <% if (supportRequest.guestPhone) { %>
+                <div class="customer-phone">
+                  <strong>Telefon:</strong> <%= supportRequest.guestPhone %>
+                </div>
+              <% } %>
+              <div class="customer-type">
+                <strong>Turi:</strong> Mehmon So‘rovi
+              </div>
+            <% } else if (supportRequest.customer) { %>
+              <!-- Ro‘yxatdan O‘tgan Mijoz Ma'lumotlari -->
+              <div class="customer-name">
+                <strong>Ism:</strong> <%= supportRequest.customer.firstName %> <%= supportRequest.customer.lastName %>
+              </div>
+              <div class="customer-email">
+                <strong>Email:</strong> <%= supportRequest.customer.email %>
+              </div>
+              <div class="customer-phone">
+                <strong>Telefon:</strong> <%= supportRequest.customer.phone %>
+              </div>
+              <% if (supportRequest.customer.accountType === 'business' && supportRequest.customer.businessName) { %>
+                <div class="customer-business">
+                  <strong>Biznes:</strong> <%= supportRequest.customer.businessName %>
+                </div>
+              <% } %>
+              <div class="customer-actions">
+                <a href="/admin/customers/<%= supportRequest.customer._id %>" class="btn btn-secondary btn-sm">Mijoz Profilini Ko‘rish</a>
+              </div>
+            <% } else { %>
+              <!-- Mijoz ma'lumotlari mavjud bo‘lmaganda -->
+              <div class="customer-info">
+                <p class="text-muted">Mijoz ma'lumotlari mavjud emas</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        
+        <div class="detail-section">
+          <h3>Muammo Tafsilotlari</h3>
+          <div class="detail-grid">
+            <% if (supportRequest.deviceType) { %>
+              <div class="detail-item">
+                <span class="detail-label">Qurilma Turi:</span>
+                <span class="detail-value">
+                  <%= supportRequest.deviceType === 'desktop' ? 'Ish stoli kompyuteri' :
+                      supportRequest.deviceType === 'laptop' ? 'Noutbuk' :
+                      supportRequest.deviceType === 'tablet' ? 'Planshet' :
+                      supportRequest.deviceType === 'smartphone' ? 'Smartfon' :
+                      supportRequest.deviceType === 'printer' ? 'Printer' :
+                      supportRequest.deviceType === 'server' ? 'Server' :
+                      supportRequest.deviceType === 'network' ? 'Tarmoq' :
+                      supportRequest.deviceType === 'other' ? 'Boshqa' : supportRequest.deviceType %>
+                </span>
+              </div>
+            <% } %>
+            
+            <% if (supportRequest.urgency) { %>
+              <div class="detail-item">
+                <span class="detail-label">Shoshilinchlik:</span>
+                <span class="detail-value urgency <%= supportRequest.urgency %>">
+                  <%= supportRequest.urgency === 'high' ? 'Yuqori' :
+                      supportRequest.urgency === 'medium' ? 'O‘rta' :
+                      supportRequest.urgency === 'low' ? 'Past' : 
+                      supportRequest.urgency.charAt(0).toUpperCase() + supportRequest.urgency.slice(1) %>
+                </span>
+              </div>
+            <% } %>
+            
+            <% if (supportRequest.location) { %>
+              <div class="detail-item">
+                <span class="detail-label">Joylashuv:</span>
+                <span class="detail-value"><%= supportRequest.location %></span>
+              </div>
+            <% } %>
+            
+            <% if (supportRequest.estimatedCost) { %>
+              <div class="detail-item">
+                <span class="detail-label">Taxminiy Narx:</span>
+                <span class="detail-value">$<%= supportRequest.estimatedCost.toFixed(2) %></span>
+              </div>
+            <% } %>
+            
+            <% if (supportRequest.actualCost) { %>
+              <div class="detail-item">
+                <span class="detail-label">Yakuniy Narx:</span>
+                <span class="detail-value">$<%= supportRequest.actualCost.toFixed(2) %></span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        
+        <div class="detail-section">
+          <h3>Tavsif</h3>
+          <div class="description">
+            <%= supportRequest.description %>
+          </div>
+        </div>
+        
+        <% if (supportRequest.appointmentDate) { %>
+          <div class="detail-section">
+            <h3>Uchrashuv</h3>
+            <div class="appointment-details">
+              <div class="appointment-date">
+                <span class="detail-label">Sana:</span>
+                <span class="detail-value">
+                  <%= new Date(supportRequest.appointmentDate).toLocaleDateString('uz-UZ') %>
+                </span>
+              </div>
+              <div class="appointment-time">
+                <span class="detail-label">Vaqt:</span>
+                <span class="detail-value">
+                  <%= new Date(supportRequest.appointmentDate).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'}) %>
+                </span>
+              </div>
+            </div>
+          </div>
+        <% } %>
+        
+        <% if (supportRequest.assignedTo) { %>
+          <div class="detail-section">
+            <h3>Tayinlangan Texnik</h3>
+            <div class="technician-details">
+              <%= supportRequest.assignedTo.firstName %> <%= supportRequest.assignedTo.lastName %>
+            </div>
+          </div>
+        <% } %>
+        
+        <% if (supportRequest.resolution) { %>
+          <div class="detail-section">
+            <h3>Hal Qilish</h3>
+            <div class="resolution">
+              <%= supportRequest.resolution %>
+            </div>
+        </div>
+        
+        <% if (supportRequest.partsUsed && supportRequest.partsUsed.length > 0) { %>
+          <div class="detail-section">
+            <h3>Ishlatilgan Qismlar</h3>
+            <ul class="parts-list">
+              <% supportRequest.partsUsed.forEach(partUsed => { %>
+                <li>
+                  <% if (partUsed.part && partUsed.part.name) { %>
+                    <!-- To‘g‘ri qism havolasi -->
+                    <%= partUsed.part.name %> x <%= partUsed.quantity %>
+                    <span class="part-price">$<%= (partUsed.part.price * partUsed.quantity).toFixed(2) %></span>
+                  <% } else { %>
+                    <!-- Noto‘g‘ri yoki o‘chirilgan qism havolasi -->
+                    <span class="text-muted">Qism (ID: <%= partUsed.part || 'Noma'lum' %>) - O‘chirilgan yoki Noto‘g‘ri</span> x <%= partUsed.quantity %>
+                    <span class="part-price text-muted">Narx mavjud emas</span>
+                  <% } %>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        <% } %>
+        
+        <% if (supportRequest.customerRating) { %>
+          <div class="detail-section">
+            <h3>Mijoz Fikri</h3>
+            <div class="feedback-details">
+              <div class="rating-display">
+                <div class="stars">
+                  <% for (let i = 1; i <= 5; i++) { %>
+                    <span class="star <%= i <= supportRequest.customerRating ? 'filled' : '' %>">★</span>
+                  <% } %>
+                </div>
+                <span class="rating-value"><%= supportRequest.customerRating %>/5</span>
+              </div>
+              
+              <% if (supportRequest.customerFeedback) { %>
+                <div class="feedback-text">
+                  <p><%= supportRequest.customerFeedback %></p>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        <% } %>
+      </div>
+      
+      <% if (!viewOnly) { %>
+        <div class="support-actions">
+          <div class="alert alert-info">
+            <strong>Eslatma:</strong> Bu admin foydalanuvchilar uchun faqat ko‘rish interfeysi. O‘zgartirishlar kiritish uchun Master administratoriga murojaat qiling.
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+  
+  <%- include('../partials/admin-footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

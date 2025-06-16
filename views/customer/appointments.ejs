@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mening Uchrashuvlarim - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="appointments-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Mening uchrashuvlarim</h1>
+        <div class="page-actions">
+          <a href="/customer/dashboard" class="btn btn-secondary btn-sm">Asosiy sahifaga qaytish</a>
+          <a href="/customer/appointment/new" class="btn btn-primary btn-sm">Yangi uchrashuv belgilash</a>
+        </div>
+      </div>
+      
+      <div class="appointments-container">
+        <% if (appointments.length === 0) { %>
+          <div class="empty-state">
+            <h2>Uchrashuvlar topilmadi</h2>
+            <p>Sizda hozircha hech qanday uchrashuv belgilangan emas.</p>
+            <a href="/customer/appointment/new" class="btn btn-primary">Birinchi uchrashuvni belgilang</a>
+          </div>
+        <% } else { %>
+          <div class="appointments-list">
+            <% 
+              const appointmentsByDate = {};
+              appointments.forEach(appointment => {
+                const dateKey = new Date(appointment.appointmentDate).toLocaleDateString();
+                if (!appointmentsByDate[dateKey]) {
+                  appointmentsByDate[dateKey] = [];
+                }
+                appointmentsByDate[dateKey].push(appointment);
+              });
+              
+              const sortedDates = Object.keys(appointmentsByDate).sort((a, b) => {
+                return new Date(a) - new Date(b);
+              });
+            %>
+            
+            <% sortedDates.forEach(dateKey => { %>
+              <div class="appointment-date-group">
+                <h2 class="date-header"><%= dateKey %></h2>
+                
+                <% appointmentsByDate[dateKey].forEach(appointment => { %>
+                  <div class="appointment-card">
+                    <div class="appointment-time">
+                      <%= new Date(appointment.appointmentDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                    </div>
+                    <div class="appointment-details">
+                      <h3>
+                        <a href="/customer/support/<%= appointment._id %>">
+                          <%= appointment.title %>
+                        </a>
+                      </h3>
+                      <div class="appointment-meta">
+                        <span class="device-type"><%= appointment.deviceType %></span>
+                        <span class="location">
+                          <% if (appointment.location === 'onsite') { %>
+                            Sizning manzilingizda
+                          <% } else if (appointment.location === 'office') { %>
+                            Bizning ofisda
+                          <% } else if (appointment.location === 'remote') { %>
+                            Masofaviy yordam
+                          <% } else { %>
+                            Manzil aniqlanmagan
+                          <% } %>
+                        </span>
+                      </div>
+                      <div class="appointment-status">
+                        <span class="status <%= appointment.status %>">
+                          <%= appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1) %>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="appointment-actions">
+                      <a href="/customer/support/<%= appointment._id %>" class="btn btn-primary btn-sm">Batafsil ko‘rish</a>
+                      <% if (new Date(appointment.appointmentDate) > new Date()) { %>
+                        <a href="/customer/appointment/<%= appointment._id %>/reschedule" class="btn btn-secondary btn-sm">Qayta belgilash</a>
+                      <% } %>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bildirishnomalar - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="notifications-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Bildirishnomalar</h1>
+        <a href="/customer/dashboard" class="btn btn-secondary btn-sm">Boshqaruvga qaytish</a>
+      </div>
+      
+      <div class="notifications-container">
+        <% if (notifications.length === 0) { %>
+          <div class="empty-state">
+            <h2>Bildirishnomalar yo‘q</h2>
+            <p>Sizda hali hech qanday bildirishnoma yo‘q.</p>
+          </div>
+        <% } else { %>
+          <div class="notifications-list">
+            <% notifications.forEach(notification => { %>
+              <div class="notification-card <%= notification.isRead ? 'read' : 'unread' %> <%= notification.type %>">
+                <div class="notification-header">
+                  <h3><%= notification.title %></h3>
+                  <div class="notification-meta">
+                    <span class="notification-type <%= notification.type %>">
+                      <%= notification.type.charAt(0).toUpperCase() + notification.type.slice(1) %>
+                    </span>
+                    <span class="notification-date">
+                      <%= new Date(notification.createdAt).toLocaleDateString() %>
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="notification-message">
+                  <%= notification.message %>
+                </div>
+                
+                <div class="notification-actions">
+                  <% if (notification.relatedModel === 'SupportRequest' && notification.relatedId) { %>
+                    <a href="/customer/support/<%= notification.relatedId %>" class="btn btn-primary btn-sm">So‘rovni ko‘rish</a>
+                  <% } %>
+                  
+                  <% if (!notification.isRead) { %>
+                    <form action="/customer/notifications/<%= notification._id %>/read" method="POST" class="inline-form">
+                      <button type="submit" class="btn btn-secondary btn-sm">O‘qilgan deb belgilash</button>
+                    </form>
+                  <% } %>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

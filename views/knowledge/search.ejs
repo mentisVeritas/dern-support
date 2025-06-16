@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilimlar Bazasi - Dern-Yordam</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="knowledge-search-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Bilimlar Bazasi</h1>
+      </div>
+      
+      <div class="search-container">
+        <form action="/knowledge/search" method="GET" class="search-form">
+          <div class="search-input-group">
+            <input 
+              type="text" 
+              name="query" 
+              placeholder="Yechimlarni qidiring..." 
+              value="<%= searchParams.query || '' %>"
+            >
+            <button type="submit" class="btn btn-primary">Qidirish</button>
+          </div>
+          
+          <div class="search-filters">
+            <div class="filter-group">
+              <label for="category">Kategoriya</label>
+              <select id="category" name="category">
+                <option value="">Barcha Kategoriyalar</option>
+                <option value="hardware" <%= searchParams.category === 'hardware' ? 'selected' : '' %>>Uskuna</option>
+                <option value="software" <%= searchParams.category === 'software' ? 'selected' : '' %>>Dasturiy Ta'minot</option>
+                <option value="network" <%= searchParams.category === 'network' ? 'selected' : '' %>>Tarmoq</option>
+                <option value="security" <%= searchParams.category === 'security' ? 'selected' : '' %>>Xavfsizlik</option>
+                <option value="maintenance" <%= searchParams.category === 'maintenance' ? 'selected' : '' %>>Texnik Xizmat</option>
+                <option value="troubleshooting" <%= searchParams.category === 'troubleshooting' ? 'selected' : '' %>>Muammolarni Hal Qilish</option>
+                <option value="other" <%= searchParams.category === 'other' ? 'selected' : '' %>>Boshqa</option>
+              </select>
+            </div>
+            
+            <div class="filter-group">
+              <label for="deviceType">Qurilma Turi</label>
+              <select id="deviceType" name="deviceType">
+                <option value="">Barcha Qurilmalar</option>
+                <option value="desktop" <%= searchParams.deviceType === 'desktop' ? 'selected' : '' %>>Ish stoli kompyuteri</option>
+                <option value="laptop" <%= searchParams.deviceType === 'laptop' ? 'selected' : '' %>>Noutbuk</option>
+                <option value="tablet" <%= searchParams.deviceType === 'tablet' ? 'selected' : '' %>>Planshet</option>
+                <option value="smartphone" <%= searchParams.deviceType === 'smartphone' ? 'selected' : '' %>>Smartfon</option>
+                <option value="printer" <%= searchParams.deviceType === 'printer' ? 'selected' : '' %>>Printer</option>
+                <option value="server" <%= searchParams.deviceType === 'server' ? 'selected' : '' %>>Server</option>
+                <option value="network" <%= searchParams.deviceType === 'network' ? 'selected' : '' %>>Tarmoq</option>
+                <option value="other" <%= searchParams.deviceType === 'other' ? 'selected' : '' %>>Boshqa</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      
+      <div class="articles-container">
+        <% if (articles.length === 0) { %>
+          <div class="empty-state">
+            <h2>Hech qanday maqola topilmadi</h2>
+            <p>Qidiruv mezonlarini o‘zgartirib ko‘ring yoki filtrları tozalab, barcha maqolalarni ko‘rib chiqing.</p>
+            <a href="/knowledge/search" class="btn btn-primary">Barcha Maqolalarni Ko‘rish</a>
+          </div>
+        <% } else { %>
+          <div class="articles-grid">
+            <% articles.forEach(article => { %>
+              <div class="article-card">
+                <h3><a href="/knowledge/article/<%= article._id %>"><%= article.title %></a></h3>
+                <div class="article-meta">
+                  <span class="category"><%= article.category %></span>
+                  <% if (article.deviceTypes && article.deviceTypes.length > 0) { %>
+                    <span class="device-types">
+                      <%= article.deviceTypes.slice(0, 2).join(', ') %>
+                      <% if (article.deviceTypes.length > 2) { %>
+                        +<%= article.deviceTypes.length - 2 %> ta ko‘proq
+                      <% } %>
+                    </span>
+                  <% } %>
+                </div>
+                <div class="article-stats">
+                  <span class="views"><%= article.viewCount %> ko‘rish</span>
+                  <span class="helpful"><%= article.helpfulCount %> foydali deb topdi</span>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

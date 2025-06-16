@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= part._id ? 'Tahrirlash' : 'Qo‘shish' %> Ehtiyot Qismi - Dern-Yordam Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="part-form-page">
+    <div class="container">
+      <div class="page-header">
+        <h1><%= part._id ? 'Tahrirlash' : 'Qo‘shish' %> Ehtiyot Qismi</h1>
+        <a href="/admin/parts" class="btn btn-secondary btn-sm">Inventarga Qaytish</a>
+      </div>
+      
+      <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-error">
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <div class="form-container">
+        <form action="<%= part._id ? '/admin/parts/' + part._id : '/admin/parts' %>" method="POST" class="part-form">
+          <div class="form-section">
+            <h2>Ehtiyot Qismi Ma'lumotlari</h2>
+            
+            <div class="form-group">
+              <label for="name">Qism Nomi</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                required 
+                value="<%= part.name || '' %>"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="description">Tavsif</label>
+              <textarea 
+                id="description" 
+                name="description" 
+                rows="3" 
+                required
+              ><%= part.description || '' %></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="category">Kategoriya</label>
+                <select id="category" name="category" required>
+                  <option value="" disabled <%= !part.category ? 'selected' : '' %>>Kategoriyani tanlang</option>
+                  <option value="cpu" <%= part.category === 'cpu' ? 'selected' : '' %>>Protsessor</option>
+                  <option value="memory" <%= part.category === 'memory' ? 'selected' : '' %>>Xotira</option>
+                  <option value="storage" <%= part.category === 'storage' ? 'selected' : '' %>>Saqlash</option>
+                  <option value="motherboard" <%= part.category === 'motherboard' ? 'selected' : '' %>>Ana Platas</option>
+                  <option value="power" <%= part.category === 'power' ? 'selected' : '' %>>Quvvat</option>
+                  <option value="display" <%= part.category === 'display' ? 'selected' : '' %>>Displey</option>
+                  <option value="peripheral" <%= part.category === 'peripheral' ? 'selected' : '' %>>Periferik</option>
+                  <option value="network" <%= part.category === 'network' ? 'selected' : '' %>>Tarmoq</option>
+                  <option value="other" <%= part.category === 'other' ? 'selected' : '' %>>Boshqa</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label>Mos Qurilmalar</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="desktop" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('desktop') ? 'checked' : '' %>
+                    >
+                    Ish stoli kompyuteri
+                  </label>
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="laptop" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('laptop') ? 'checked' : '' %>
+                    >
+                    Noutbuk
+                  </label>
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="tablet" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('tablet') ? 'checked' : '' %>
+                    >
+                    Planshet
+                  </label>
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="smartphone" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('smartphone') ? 'checked' : '' %>
+                    >
+                    Smartfon
+                  </label>
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="printer" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('printer') ? 'checked' : '' %>
+                    >
+                    Printer
+                  </label>
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="server" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('server') ? 'checked' : '' %>
+                    >
+                    Server
+                  </label>
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="network" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('network') ? 'checked' : '' %>
+                    >
+                    Tarmoq
+                  </label>
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="compatibleDevices" 
+                      value="other" 
+                      <%= part.compatibleDevices && part.compatibleDevices.includes('other') ? 'checked' : '' %>
+                    >
+                    Boshqa
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <h2>Inventar Ma'lumotlari</h2>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="stockQuantity">Zahira Miqdori</label>
+                <input 
+                  type="number" 
+                  id="stockQuantity" 
+                  name="stockQuantity" 
+                  required 
+                  min="0" 
+                  value="<%= part.stockQuantity || 0 %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="price">Narx ($)</label>
+                <input 
+                  type="number" 
+                  id="price" 
+                  name="price" 
+                  required 
+                  min="0" 
+                  step="0.01" 
+                  value="<%= part.price || 0 %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="minimumStockLevel">Minimal Zahira Darajasi</label>
+                <input 
+                  type="number" 
+                  id="minimumStockLevel" 
+                  name="minimumStockLevel" 
+                  min="0" 
+                  value="<%= part.minimumStockLevel || 5 %>"
+                >
+                <p class="form-help">Zahira bu darajadan pastga tushganda ogohlantiriladi.</p>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="location">Saqlash Joyi</label>
+              <input 
+                type="text" 
+                id="location" 
+                name="location" 
+                placeholder="masalan, Raf A1, Quti 3 va hokazo" 
+                value="<%= part.location || '' %>"
+              >
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <h2>Ta'minotchi Ma'lumotlari</h2>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="supplierName">Ta'minotchi Nomi</label>
+                <input 
+                  type="text" 
+                  id="supplierName" 
+                  name="supplierName" 
+                  value="<%= part.supplier ? part.supplier.name : '' %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="supplierContact">Ta'minotchi Aloqasi</label>
+                <input 
+                  type="text" 
+                  id="supplierContact" 
+                  name="supplierContact" 
+                  value="<%= part.supplier ? part.supplier.contactInfo : '' %>"
+                  placeholder="Email, telefon yoki veb-sayt"
+                >
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <%= part._id ? 'Yangilash' : 'Qo‘shish' %> Qism
+            </button>
+            <a href="/admin/parts" class="btn btn-secondary">Bekor qilish</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

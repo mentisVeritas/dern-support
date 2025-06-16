@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= article.title %> - Dern-Yordam Bilimlar Bazasi</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+  
+  </style>
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="knowledge-article-page section">
+    <div class="container">
+      <div class="page-header">
+        <h1><%= article.title %></h1>
+        <a href="/knowledge/search" class="btn btn-outline-primary btn-sm">Bilimlar Bazasiga Qaytish</a>
+      </div>
+      
+      <div class="article-container">
+        <div class="article-meta">
+          <div class="meta-item">
+            <span class="meta-label">Kategoriya:</span>
+            <span class="meta-value"><%= article.category %></span>
+          </div>
+          
+          <div class="meta-item">
+            <span class="meta-label">Qurilma Turlari:</span>
+            <span class="meta-value">
+              <%= article.deviceTypes.join(', ') %>
+            </span>
+          </div>
+          
+          <% if (article.tags && article.tags.length > 0) { %>
+            <div class="meta-item">
+              <span class="meta-label">Teglar:</span>
+              <div class="tags">
+                <% article.tags.forEach(tag => { %>
+                  <span class="tag"><%= tag %></span>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+          
+          <div class="meta-item">
+            <span class="meta-label">Ko‘rishlar:</span>
+            <span class="meta-value"><%= article.viewCount %></span>
+          </div>
+          
+          <% if (article.author) { %>
+            <div class="meta-item">
+              <span class="meta-label">Muallif:</span>
+              <span class="meta-value">
+                <%= article.author.firstName %> <%= article.author.lastName %>
+              </span>
+            </div>
+          <% } %>
+        </div>
+        
+        <div class="article-content">
+          <%- article.content %>
+        </div>
+        
+        <div class="article-feedback">
+          <h3>Ushbu maqola foydali bo‘ldimi?</h3>
+          <form action="/knowledge/article/<%= article._id %>/rate" method="POST" class="feedback-form">
+            <button type="submit" name="helpful" value="yes" class="btn btn-sm btn-success">Ha</button>
+            <button type="submit" name="helpful" value="no" class="btn btn-sm btn-secondary">Yo‘q</button>
+          </form>
+        </div>
+      </div>
+      
+      <% if (relatedArticles && relatedArticles.length > 0) { %>
+        <div class="related-articles">
+          <h2>Bog‘liq Maqolalar</h2>
+          <div class="articles-grid">
+            <% relatedArticles.forEach(relatedArticle => { %>
+              <div class="article-card">
+                <h3><a href="/knowledge/article/<%= relatedArticle._id %>"><%= relatedArticle.title %></a></h3>
+                <div class="article-meta">
+                  <span class="category"><%= relatedArticle.category %></span>
+                  <span class="views"><%= relatedArticle.viewCount %> ko‘rish</span>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

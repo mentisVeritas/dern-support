@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Dern Yordam</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <%- include('../partials/master-header', { currentPage: 'support' }) %>
+    
+    <div class="dashboard-content">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2"><%= title %></h1>
+            <div>
+                <a href="/master/support" class="btn btn-secondary">← Barcha So'rovlarga Qaytish</a>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <!-- Asosiy Kontent -->
+            <main role="main" class="">
+                <!-- So'rov Ko'rinishi -->
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>So'rov Tafsilotlari</h5>
+                                <small class="text-muted">ID: <%= supportRequest._id.toString().slice(-8) %></small>
+                            </div>
+                            <div class="card-body">
+                                <h4><%= supportRequest.title %></h4>
+                                <p class="text-muted"><%= supportRequest.description %></p>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Qurilma Turi:</strong> 
+                                        <span class="badge badge-info"><%= supportRequest.deviceType %></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Muhimlik:</strong> 
+                                        <span class="badge badge-<%= supportRequest.urgency === 'critical' ? 'danger' : supportRequest.urgency === 'high' ? 'warning' : supportRequest.urgency === 'medium' ? 'info' : 'secondary' %>">
+                                            <%= supportRequest.urgency === 'critical' ? 'Juda Muhim' : supportRequest.urgency === 'high' ? 'Muhim' : supportRequest.urgency === 'medium' ? 'O\'rtacha' : 'Past' %>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Holat:</strong> 
+                                        <span class="badge badge-<%= supportRequest.status === 'resolved' ? 'success' : supportRequest.status === 'in-progress' ? 'warning' : supportRequest.status === 'pending' ? 'info' : 'secondary' %>">
+                                            <%= supportRequest.status === 'resolved' ? 'Hal Qilingan' : supportRequest.status === 'in-progress' ? 'Jarayonda' : supportRequest.status === 'pending' ? 'Kutilmoqda' : supportRequest.status %>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Tasdiqlash Holati:</strong> 
+                                        <span class="approval-badge approval-<%= (supportRequest.approvalStatus || 'pending_approval').replace('_', '-') %>">
+                                            <%= (supportRequest.approvalStatus || 'pending_approval') === 'approved' ? 'Tasdiqlangan' : (supportRequest.approvalStatus || 'pending_approval') === 'rejected' ? 'Rad Etilgan' : 'Tasdiqlash Kutilmoqda' %>
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Yaratilgan:</strong> <%= new Date(supportRequest.createdAt).toLocaleString('uz-UZ') %>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Oxirgi Yangilanish:</strong> <%= new Date(supportRequest.updatedAt).toLocaleString('uz-UZ') %>
+                                    </div>
+                                </div>
+
+                                <% if (supportRequest.appointmentDate) { %>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <strong>Uchrashuv Sanasi:</strong> <%= new Date(supportRequest.appointmentDate).toLocaleString('uz-UZ') %>
+                                        </div>
+                                    </div>
+                                <% } %>
+
+                                <!-- Mehmon Ma'lumotlari (agar mavjud bo'lsa) -->
+                                <% if (supportRequest.isGuestRequest) { %>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h6>Mehmon So'rovi Ma'lumotlari:</h6>
+                                            <% if (supportRequest.guestName) { %>
+                                                <p><strong>Ism:</strong> <%= supportRequest.guestName %></p>
+                                            <% } %>
+                                            <% if (supportRequest.guestEmail) { %>
+                                                <p><strong>Email:</strong> <%= supportRequest.guestEmail %></p>
+                                            <% } %>
+                                            <% if (supportRequest.guestPhone) { %>
+                                                <p><strong>Telefon:</strong> <%= supportRequest.guestPhone %></p>
+                                            <% } %>
+                                            <% if (supportRequest.district) { %>
+                                                <p><strong>Tuman:</strong> <%= supportRequest.district %></p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <!-- Mijoz Ma'lumotlari -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h6>Mijoz Ma'lumotlari</h6>
+                            </div>
+                            <div class="card-body">
+                                <% if (supportRequest.customer) { %>
+                                    <div class="text-center mb-3">
+                                        <div class="avatar-large bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 24px;">
+                                            <%= supportRequest.customer.firstName.charAt(0) + supportRequest.customer.lastName.charAt(0) %>
+                                        </div>
+                                        <h5 class="mt-2"><%= supportRequest.customer.firstName %> <%= supportRequest.customer.lastName %></h5>
+                                    </div>
+                                    <p><small class="text-muted"><%= supportRequest.customer.email %></small></p>
+                                    <% if (supportRequest.customer.phone) { %>
+                                        <p><small><%= supportRequest.customer.phone %></small></p>
+                                    <% } %>
+                                    <% if (supportRequest.customer.businessName) { %>
+                                        <p><strong>Biznes:</strong> <%= supportRequest.customer.businessName %></p>
+                                    <% } %>
+                                    <% if (supportRequest.customer.accountType) { %>
+                                        <p><strong>Hisob Turi:</strong> 
+                                            <span class="badge badge-primary"><%= supportRequest.customer.accountType === 'business' ? 'Biznes' : 'Shaxsiy' %></span>
+                                        </p>
+                                    <% } %>
+                                <% } else if (supportRequest.isGuestRequest) { %>
+                                    <div class="text-center mb-3">
+                                        <div class="avatar-large bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 24px;">
+                                            <% if (supportRequest.guestName) { %>
+                                                <%= supportRequest.guestName.split(' ').map(n => n.charAt(0)).join('') %>
+                                            <% } else { %>
+                                                M
+                                            <% } %>
+                                        </div>
+                                        <h5 class="mt-2">
+                                            <%= supportRequest.guestName || 'Mehmon Foydalanuvchi' %>
+                                        </h5>
+                                        <span class="badge badge-info">Mehmon So'rovi</span>
+                                    </div>
+                                    <p><small class="text-muted"><%= supportRequest.guestEmail || 'Email berilmagan' %></small></p>
+                                    <% if (supportRequest.guestPhone) { %>
+                                        <p><small><%= supportRequest.guestPhone %></small></p>
+                                    <% } %>
+                                <% } else { %>
+                                    <div class="text-center text-muted py-4">
+                                        <p>Mijoz ma'lumotlari mavjud emas</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Tayinlash Ma'lumotlari -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h6>Tayinlash</h6>
+                            </div>
+                            <div class="card-body">
+                                <% if (supportRequest.assignedTo) { %>
+                                    <p><strong>Tayinlangan:</strong></p>
+                                    <p><%= supportRequest.assignedTo.firstName %> <%= supportRequest.assignedTo.lastName %></p>
+                                    <p><small class="text-muted"><%= supportRequest.assignedTo.email %></small></p>
+                                <% } else { %>
+                                    <p class="text-muted">Hali tayinlanmagan</p>
+                                    <% if (technicians && technicians.length > 0) { %>
+                                        <form method="POST" action="/master/support/<%= supportRequest._id %>/assign">
+                                            <div class="form-group">
+                                                <label for="assignTo">Texnikga Tayinlash:</label>
+                                                <select class="form-control" id="assignTo" name="assignTo" required>
+                                                    <option value="">Texnikni Tanlang</option>
+                                                    <% technicians.forEach(tech => { %>
+                                                        <option value="<%= tech._id %>"><%= tech.firstName %> <%= tech.lastName %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-sm">Tayinlash</button>
+                                        </form>
+                                    <% } %>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Bosh Administrator Tasdiqlash Ma'lumotlari -->
+                        <% if (supportRequest.masterApprovedBy) { %>
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6>Bosh Administrator Tasdiqlashi</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>Tasdiqlagan:</strong></p>
+                                    <p><%= supportRequest.masterApprovedBy.firstName %> <%= supportRequest.masterApprovedBy.lastName %></p>
+                                    <p><small class="text-muted"><%= new Date(supportRequest.masterApprovedAt).toLocaleString('uz-UZ') %></small></p>
+                                    <% if (supportRequest.masterSetPrice) { %>
+                                        <p><strong>Belgilangan Narx:</strong> <%= (supportRequest.masterSetPrice * 12500).toLocaleString('uz-UZ') %> so'm</p>
+                                    <% } %>
+                                    <% if (supportRequest.masterComments) { %>
+                                        <p><strong>Izohlar:</strong></p>
+                                        <p><%= supportRequest.masterComments %></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Bosh Administrator Harakatlari -->
+                <% if ((supportRequest.approvalStatus || 'pending_approval') === 'pending_approval') { %>
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5>Bosh Administrator Tasdiqlashi Talab Qilinadi</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Bu so'rov texnikga tayinlanishidan oldin bosh administrator tasdiqlashini talab qiladi.</p>
+                            
+                            <form method="POST" action="/master/support/<%= supportRequest._id %>/approve">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="masterSetPrice">Narxni Belgilash (Ixtiyoriy)</label>
+                                            <input type="number" step="0.01" class="form-control" id="masterSetPrice" name="masterSetPrice" placeholder="0.00">
+                                            <small class="form-text text-muted">USD da kiriting (avtomatik so'mga aylanadi)</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="masterComments">Izohlar</label>
+                                            <textarea class="form-control" id="masterComments" name="masterComments" rows="3" placeholder="Izohlaringizni qo'shing..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <button type="submit" name="action" value="approve" class="btn btn-success mr-2">
+                                        <i class="fas fa-check"></i> So'rovni Tasdiqlash
+                                    </button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#rejectModal">
+                                        <i class="fas fa-times"></i> So'rovni Rad Etish
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5>Tasdiqlash Holati</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Holat: 
+                                <span class="approval-badge approval-<%= (supportRequest.approvalStatus || 'pending_approval').replace('_', '-') %>">
+                                    <%= (supportRequest.approvalStatus || 'pending_approval') === 'approved' ? 'Tasdiqlangan' : (supportRequest.approvalStatus || 'pending_approval') === 'rejected' ? 'Rad Etilgan' : 'Tasdiqlash Kutilmoqda' %>
+                                </span>
+                            </h6>
+                            <% if (supportRequest.approvalStatus === 'rejected' && supportRequest.rejectionReason) { %>
+                                <p><strong>Rad Etish Sababi:</strong> <%= supportRequest.rejectionReason %></p>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+
+                <!-- Ishlatilgan Qismlar (agar mavjud bo'lsa) -->
+                <% if (supportRequest.partsUsed && supportRequest.partsUsed.length > 0) { %>
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h6>Ishlatilgan Qismlar</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Qism Nomi</th>
+                                            <th>Miqdor</th>
+                                            <th>Birlik Narxi</th>
+                                            <th>Jami</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% supportRequest.partsUsed.forEach(partUsed => { %>
+                                            <tr>
+                                                <td><%= partUsed.part ? partUsed.part.name : 'Noma\'lum Qism' %></td>
+                                                <td><%= partUsed.quantity %></td>
+                                                <td><%= (partUsed.unitPrice * 12500).toLocaleString('uz-UZ') %> so'm</td>
+                                                <td><%= ((partUsed.quantity * partUsed.unitPrice) * 12500).toLocaleString('uz-UZ') %> so'm</td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </main>
+        </div>
+
+        <!-- Rad Etish Modali -->
+        <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="POST" action="/master/support/<%= supportRequest._id %>/approve">
+                        <div class="modal-header">
+                            <h5 class="modal-title">So'rovni Rad Etish</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="rejectionReason">Rad Etish Sababi</label>
+                                <textarea class="form-control" id="rejectionReason" name="rejectionReason" rows="4" required placeholder="Iltimos, rad etish sababini ko'rsating..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalMasterComments">Qo'shimcha Izohlar</label>
+                                <textarea class="form-control" id="modalMasterComments" name="masterComments" rows="3" placeholder="Qo'shimcha izohlar qo'shing..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor Qilish</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger">So'rovni Rad Etish</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/master-footer') %>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

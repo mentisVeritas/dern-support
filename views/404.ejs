@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sahifa Topilmadi - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .error-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+    }
+    
+    .error-container {
+      max-width: 600px;
+      padding: 2rem;
+    }
+    
+    .error-code {
+      font-size: 8rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+    
+    .error-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .error-description {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+    
+    .error-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn-white {
+      background: white;
+      color: #667eea;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      color: #667eea;
+      text-decoration: none;
+    }
+    
+    .btn-outline-white {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-white:hover {
+      background: white;
+      color: #667eea;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-page">
+    <div class="error-container">
+      <div class="error-code">404</div>
+      <h1 class="error-title">Sahifa Topilmadi</h1>
+      <p class="error-description">
+        Kechirasiz, siz qidirayotgan sahifa mavjud emas yoki ko'chirilgan. 
+        Bosh sahifaga qaytib, kerakli ma'lumotni qidiring.
+      </p>
+      <div class="error-actions">
+        <a href="/" class="btn-white">
+          <i class="fas fa-home"></i> Bosh Sahifa
+        </a>
+        <a href="/customer/dashboard" class="btn-outline-white">
+          <i class="fas fa-tachometer-alt"></i> Mening Panelim
+        </a>
+        <a href="/guest-support" class="btn-outline-white">
+          <i class="fas fa-headset"></i> Yordam Olish
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

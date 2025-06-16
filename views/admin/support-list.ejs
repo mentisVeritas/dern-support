@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yordam So‘rovlari - Dern-Yordam Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/admin-header', { currentPage: 'support' }) %>
+  
+  <div class="dashboard-content">
+    <div class="page-header">
+      <h1>Yordam So‘rovlari</h1>
+      <p class="text-muted">Yordam so‘rovlariga faqat ko‘rish uchun ruxsat</p>
+    </div>
+      
+  <main class="support-list-page">
+    <div class="container">
+      
+      <div class="filters-container">
+        <form action="/admin/support" method="GET" class="filters-form">
+          <div class="filter-group">
+            <label for="status">Holati</label>
+            <select id="status" name="status">
+              <option value="">Barcha Holatlar</option>
+              <option value="pending" <%= filters && filters.status === 'pending' ? 'selected' : '' %>>Kutilmoqda</option>
+              <option value="assigned" <%= filters && filters.status === 'assigned' ? 'selected' : '' %>>Tayinlangan</option>
+              <option value="in-progress" <%= filters && filters.status === 'in-progress' ? 'selected' : '' %>>Jarayonda</option>
+              <option value="resolved" <%= filters && filters.status === 'resolved' ? 'selected' : '' %>>Hal Qilingan</option>
+              <option value="closed" <%= filters && filters.status === 'closed' ? 'selected' : '' %>>Yopilgan</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="urgency">Shoshilinchlik</label>
+            <select id="urgency" name="urgency">
+              <option value="">Barcha Shoshilinchlik Darajalari</option>
+              <option value="low" <%= filters && filters.urgency === 'low' ? 'selected' : '' %>>Past</option>
+              <option value="medium" <%= filters && filters.urgency === 'medium' ? 'selected' : '' %>>O‘rta</option>
+              <option value="high" <%= filters && filters.urgency === 'high' ? 'selected' : '' %>>Yuqori</option>
+              <option value="critical" <%= filters && filters.urgency === 'critical' ? 'selected' : '' %>>Kritik</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="deviceType">Qurilma Turi</label>
+            <select id="deviceType" name="deviceType">
+              <option value="">Barcha Qurilma Turlari</option>
+              <option value="desktop" <%= filters && filters.deviceType === 'desktop' ? 'selected' : '' %>>Ish stoli kompyuteri</option>
+              <option value="laptop" <%= filters && filters.deviceType === 'laptop' ? 'selected' : '' %>>Noutbuk</option>
+              <option value="tablet" <%= filters && filters.deviceType === 'tablet' ? 'selected' : '' %>>Planshet</option>
+              <option value="smartphone" <%= filters && filters.deviceType === 'smartphone' ? 'selected' : '' %>>Smartfon</option>
+              <option value="printer" <%= filters && filters.deviceType === 'printer' ? 'selected' : '' %>>Printer</option>
+              <option value="server" <%= filters && filters.deviceType === 'server' ? 'selected' : '' %>>Server</option>
+              <option value="network" <%= filters && filters.deviceType === 'network' ? 'selected' : '' %>>Tarmoq</option>
+              <option value="other" <%= filters && filters.deviceType === 'other' ? 'selected' : '' %>>Boshqa</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-sm">Filtrlarni Qo‘llash</button>
+          <a href="/admin/support" class="btn btn-secondary btn-sm">Filtrlarni Tozalash</a>
+        </form>
+      </div>
+      
+      <div class="support-requests-container">
+        <% if (supportRequests.length === 0) { %>
+          <div class="empty-state">
+            <h2>Hech qanday yordam so‘rovi topilmadi</h2>
+            <p>Joriy filtrlaringizga mos keladigan yordam so‘rovlari mavjud emas.</p>
+          </div>
+        <% } else { %>
+          <div class="table-responsive">
+            <table class="support-requests-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Sarlavha</th>
+                  <th>Mijoz</th>
+                  <th>Qurilma Turi</th>
+                  <th>Shoshilinchlik</th>
+                  <th>Holati</th>
+                  <th>Yaratilgan</th>
+                  <th>Amallar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% supportRequests.forEach(request => { %>
+                  <tr>
+                    <td><%= request._id.toString().substring(0, 8) %>...</td>
+                    <td><%= request.title %></td>
+                    <td>
+                      <% if (request.customer) { %>
+                        <%= request.customer.firstName %> <%= request.customer.lastName %>
+                      <% } else { %>
+                        Noma'lum
+                      <% } %>
+                    </td>
+                    <td>
+                      <%= request.deviceType === 'desktop' ? 'Ish stoli kompyuteri' :
+                          request.deviceType === 'laptop' ? 'Noutbuk' :
+                          request.deviceType === 'tablet' ? 'Planshet' :
+                          request.deviceType === 'smartphone' ? 'Smartfon' :
+                          request.deviceType === 'printer' ? 'Printer' :
+                          request.deviceType === 'server' ? 'Server' :
+                          request.deviceType === 'network' ? 'Tarmoq' :
+                          request.deviceType === 'other' ? 'Boshqa' : request.deviceType %>
+                    </td>
+                    <td>
+                      <span class="badge urgency-<%= request.urgency %>">
+                        <%= request.urgency === 'low' ? 'Past' :
+                            request.urgency === 'medium' ? 'O‘rta' :
+                            request.urgency === 'high' ? 'Yuqori' :
+                            request.urgency === 'critical' ? 'Kritik' : 
+                            request.urgency.charAt(0).toUpperCase() + request.urgency.slice(1) %>
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge status-<%= request.status %>">
+                        <%= request.status === 'pending' ? 'Kutilmoqda' :
+                            request.status === 'assigned' ? 'Tayinlangan' :
+                            request.status === 'in-progress' ? 'Jarayonda' :
+                            request.status === 'resolved' ? 'Hal Qilingan' :
+                            request.status === 'closed' ? 'Yopilgan' : 
+                            request.status.charAt(0).toUpperCase() + request.status.slice(1) %>
+                      </span>
+                    </td>
+                    <td><%= new Date(request.createdAt).toLocaleDateString('uz-UZ') %></td>
+                    <td>
+                      <a href="/admin/support/<%= request._id %>" class="btn btn-primary btn-sm">Ko‘rish</a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  
+  </div>
+  
+  <%- include('../partials/admin-footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

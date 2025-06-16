@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uchrashuv Belgilash - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="appointment-form-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Uchrashuv belgilash</h1>
+        <a href="<%= supportRequest ? '/customer/support/' + supportRequest._id : '/customer/dashboard' %>" class="btn btn-secondary btn-sm">Orqaga</a>
+      </div>
+      
+      <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-error">
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <div class="form-container">
+        <form action="<%= supportRequest ? '/customer/support/' + supportRequest._id + '/appointment' : '/customer/appointment' %>" method="POST" class="appointment-form">
+          <div class="form-section">
+            <h2>Uchrashuv tafsilotlari</h2>
+            
+            <% if (!supportRequest) { %>
+              <div class="form-group">
+                <label for="title">Uchrashuv sababi</label>
+                <input 
+                  type="text" 
+                  id="title" 
+                  name="title" 
+                  required 
+                  placeholder="Muammoingizning qisqacha tavsifi"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="description">Batafsil tavsif</label>
+                <textarea 
+                  id="description" 
+                  name="description" 
+                  rows="4" 
+                  required 
+                  placeholder="Texnik muammoingiz haqida batafsil yozing"
+                ></textarea>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="deviceType">Qurilma turi</label>
+                  <select id="deviceType" name="deviceType" required>
+                    <option value="" disabled selected>Qurilma turini tanlang</option>
+                    <option value="desktop">Stol kompyuteri</option>
+                    <option value="laptop">Noutbuk</option>
+                    <option value="tablet">Planshet</option>
+                    <option value="smartphone">Smartfon</option>
+                    <option value="printer">Printer</option>
+                    <option value="server">Server</option>
+                    <option value="network">Tarmoq uskunasi</option>
+                    <option value="other">Boshqa</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="urgency">Shoshilinchlik darajasi</label>
+                  <select id="urgency" name="urgency" required>
+                    <option value="" disabled selected>Shoshilinchlik darajasini tanlang</option>
+                    <option value="low">Past - Shoshilinch emas</option>
+                    <option value="medium">O‘rta - Tez orada kerak</option>
+                    <option value="high">Yuqori - Tezkor yechim kerak</option>
+                    <option value="critical">Favqulodda - Zudlik bilan</option>
+                  </select>
+                </div>
+              </div>
+            <% } else { %>
+              <div class="support-request-summary">
+                <h3><%= supportRequest.title %></h3>
+                <div class="request-meta">
+                  <span class="device-type"><%= supportRequest.deviceType %></span>
+                  <span class="urgency <%= supportRequest.urgency %>"><%= supportRequest.urgency %></span>
+                </div>
+              </div>
+            <% } %>
+            
+            <div class="form-group">
+              <label for="location">Xizmat ko‘rsatish joyi</label>
+              <select id="location" name="location" required>
+                <option value="" disabled selected>Joyni tanlang</option>
+                <option value="onsite">Sizning manzilingizda (joyida)</option>
+                <option value="office">Bizning ofisda</option>
+                <option value="remote">Masofaviy yordam</option>
+              </select>
+            </div>
+            
+            <div class="form-group" id="addressField" style="display: none;">
+              <label for="address">Sizning manzilingiz</label>
+              <textarea 
+                id="address" 
+                name="address" 
+                rows="3" 
+                placeholder="Joyida xizmat uchun to‘liq manzilingizni yozing"
+              ><%= user && user.address ? `${user.address.street}, ${user.address.city}, ${user.address.state} ${user.address.zipCode}` : '' %></textarea>
+            </div>
+            
+            <div class="form-section">
+              <h3>Afzal ko‘rilgan sana va vaqt</h3>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="appointmentDate">Sana</label>
+                  <input 
+                    type="date" 
+                    id="appointmentDate" 
+                    name="appointmentDate" 
+                    required 
+                    min="<%= new Date().toISOString().split('T')[0] %>"
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label for="appointmentTime">Vaqt</label>
+                  <input 
+                    type="time" 
+                    id="appointmentTime" 
+                    name="appointmentTime" 
+                    required
+                  >
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="notes">Qo‘shimcha izohlar</label>
+                <textarea 
+                  id="notes" 
+                  name="notes" 
+                  rows="3" 
+                  placeholder="Uchrashuvga tayyorgarlik ko‘rishimizga yordam beradigan har qanday qo‘shimcha ma’lumot"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Uchrashuvni belgilash</button>
+            <a href="<%= supportRequest ? '/customer/support/' + supportRequest._id : '/customer/dashboard' %>" class="btn btn-secondary">Bekor qilish</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script>
+    // JavaScript o‘zgartirilmagan — faqat funksionallik uchun
+  </script>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

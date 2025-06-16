@@ -1,0 +1,47 @@
+<% if (typeof isAdmin !== 'undefined' && isAdmin && !isMaster) { %>
+  <!-- Admin users get the sidebar layout -->
+  <%- include('admin-header', { currentPage: typeof currentPage !== 'undefined' ? currentPage : '' }) %>
+<% } else if (typeof isMaster !== 'undefined' && isMaster) { %>
+  <!-- Master users get the master sidebar layout -->
+  <%- include('master-header', { currentPage: typeof currentPage !== 'undefined' ? currentPage : '' }) %>
+<% } else { %>
+  <!-- Regular users and customers get the traditional navbar -->
+  <header class="site-header">
+    <div class="container">
+      <div class="logo">
+        <a href="/">
+          <i class="fas fa-tools"></i>
+          Dern-Yordam
+        </a>
+      </div>
+      
+      <nav class="nav-links">
+        <a href="/">Bosh sahifa</a>
+        <a href="/#services">Xizmatlar</a>
+        <a href="/knowledge/search">Bilimlar bazasi</a>
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <% if (typeof isMaster !== 'undefined' && isMaster) { %>
+            <a href="/master/dashboard">Master boshqaruv paneli</a>
+          <% } else if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+            <a href="/admin/dashboard">Admin boshqaruv paneli</a>
+          <% } else { %>
+            <a href="/customer/dashboard">Boshqaruv paneli</a>
+            <a href="/customer/support/new" class="btn btn-primary btn-sm">Yangi so'rov</a>
+          <% } %>
+          <a href="/logout" class="btn btn-outline-primary btn-sm">Chiqish</a>
+        <% } else { %>
+          <a href="/guest-support" class="btn btn-accent btn-sm">Tezkor yordam</a>
+          <a href="/login">Kirish</a>
+          <a href="/signup" class="btn btn-primary btn-sm">Ro'yxatdan o'tish</a>
+        <% } %>
+      </nav>
+      
+      <!-- Mobile menu toggle -->
+      <button class="mobile-menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+<% } %>

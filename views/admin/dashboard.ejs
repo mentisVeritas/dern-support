@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Boshqaruv Paneli - Dern-Yordam</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/admin-header', { currentPage: 'dashboard' }) %>
+  
+  <div class="dashboard-content">
+    <div class="dashboard-header">
+      <h1>Admin Boshqaruv Paneli</h1>
+      <p class="text-muted">Tizim ma'lumotlariga faqat ko‘rish uchun ruxsat</p>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-value"><%= pendingRequestsCount %></div>
+          <div class="stat-label">Kutilayotgan So‘rovlar</div>
+          <a href="/admin/support?status=pending" class="stat-link">Barchasini Ko‘rish</a>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-value"><%= inProgressRequestsCount %></div>
+          <div class="stat-label">Jarayonda</div>
+          <a href="/admin/support?status=in-progress" class="stat-link">Barchasini Ko‘rish</a>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-value"><%= resolvedRequestsCount %></div>
+          <div class="stat-label">Hal Qilingan</div>
+          <a href="/admin/support?status=resolved" class="stat-link">Barchasini Ko‘rish</a>
+        </div>
+      </div>
+      
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-value"><%= customersCount %></div>
+          <div class="stat-label">Mijozlar</div>
+          <a href="/admin/customers" class="stat-link">Barchasini Ko‘rish</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-6">
+        <section class="dashboard-section">
+          <div class="section-header">
+            <h2>Bugungi Uchrashuvlar</h2>
+          </div>
+          
+          <div class="appointments-list">
+            <% if (todayAppointments.length === 0) { %>
+              <div class="empty-state">
+                <p>Bugun uchun uchrashuvlar rejalashtirilmagan.</p>
+              </div>
+            <% } else { %>
+              <% todayAppointments.forEach(appointment => { %>
+                <div class="appointment-card">
+                  <div class="appointment-time">
+                    <%= new Date(appointment.appointmentDate).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'}) %>
+                  </div>
+                  <h3><a href="/admin/support/<%= appointment._id %>"><%= appointment.title %></a></h3>
+                  <div class="customer-info">
+                    <% if (appointment.customer) { %>
+                      <span class="customer-name"><%= appointment.customer.firstName %> <%= appointment.customer.lastName %></span>
+                      <span class="customer-phone"><%= appointment.customer.phone %></span>
+                    <% } else { %>
+                      <span class="customer-name">Mijoz O‘chirilgan</span>
+                      <span class="customer-phone">Mavjud emas</span>
+                    <% } %>
+                  </div>
+                  <div class="appointment-meta">
+                    <span class="device-type"><%= appointment.deviceType %></span>
+                    <span class="status <%= appointment.status %>">
+                      <%= appointment.status === 'resolved' ? 'Hal Qilingan' : appointment.status === 'in-progress' ? 'Jarayonda' : 'Yangi' %>
+                    </span>
+                  </div>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+        </section>
+      </div>
+      
+      <div class="col-md-6">
+        <section class="dashboard-section">
+          <div class="section-header">
+            <h2>Kam Qolgan Ehtiyot Qismlar</h2>
+            <a href="/admin/parts?lowStock=true" class="view-all">Barchasini Ko‘rish</a>
+          </div>
+          
+          <div class="parts-list">
+            <% if (lowStockParts.length === 0) { %>
+              <div class="empty-state">
+                <p>Hozirda kam qolgan ehtiyot qismlar mavjud emas.</p>
+              </div>
+            <% } else { %>
+              <% lowStockParts.forEach(part => { %>
+                <div class="part-card low-stock">
+                  <h3><%= part.name %></h3>
+                  <div class="part-stock">
+                    <span class="stock-label">Zahira:</span>
+                    <span class="stock-value"><%= part.stockQuantity %></span>
+                  </div>
+                  <div class="part-meta">
+                    <span class="part-category"><%= part.category %></span>
+                    <span class="part-price">$<%= part.price.toFixed(2) %></span>
+                  </div>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+        </section>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-12">
+        <section class="dashboard-section">
+          <div class="section-header">
+            <h2>So‘nggi Yordam So‘rovlari</h2>
+            <a href="/admin/support" class="view-all">Barchasini Ko‘rish</a>
+          </div>
+          
+          <div class="support-requests-list">
+            <% if (recentRequests.length === 0) { %>
+              <div class="empty-state">
+                <p>Yordam so‘rovlari mavjud emas.</p>
+              </div>
+            <% } else { %>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Mijoz</th>
+                      <th>Sarlavha</th>
+                      <th>Holati</th>
+                      <th>Shoshilinchlik</th>
+                      <th>Yaratilgan</th>
+                      <th>Amal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% recentRequests.forEach(request => { %>
+                      <tr>
+                        <td><code><%= request._id.toString().slice(-6) %></code></td>
+                        <td>
+                          <% if (request.customer) { %>
+                            <span class="customer-name"><%= request.customer.firstName %> <%= request.customer.lastName %></span>
+                          <% } else { %>
+                            <span class="customer-name">Mijoz O‘chirilgan</span>
+                          <% } %>
+                        </td>
+                        <td><%= request.title %></td>
+                        <td>
+                          <span class="badge badge-<%= request.status === 'resolved' ? 'success' : request.status === 'in-progress' ? 'warning' : 'info' %>">
+                            <%= request.status === 'resolved' ? 'Hal Qilingan' : request.status === 'in-progress' ? 'Jarayonda' : 'Yangi' %>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="badge badge-<%= request.urgency === 'high' ? 'danger' : request.urgency === 'medium' ? 'warning' : 'secondary' %>">
+                            <%= request.urgency === 'high' ? 'Yuqori' : request.urgency === 'medium' ? 'O‘rta' : 'Past' %>
+                          </span>
+                        </td>
+                        <td><%= new Date(request.createdAt).toLocaleDateString('uz-UZ') %></td>
+                        <td>
+                          <a href="/admin/support/<%= request._id %>" class="btn btn-sm btn-outline-primary">Ko‘rish</a>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            <% } %>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  
+  <%- include('../partials/admin-footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

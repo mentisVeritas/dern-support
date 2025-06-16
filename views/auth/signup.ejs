@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ro‘yxatdan o‘tish - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="auth-page section">
+    <div class="container">
+      <div class="auth-form-container">
+        <h1>Hisob yarating</h1>
+        
+        <% if (typeof error !== 'undefined') { %>
+          <div class="alert alert-error">
+            <%= error %>
+          </div>
+        <% } %>
+        
+        <form action="/signup" method="POST" class="auth-form">
+          <div class="form-section">
+            <h2>Hisob ma'lumotlari</h2>
+            
+            <div class="form-group">
+              <label for="email">Elektron pochta manzili</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required 
+                value="<%= typeof email !== 'undefined' ? email : '' %>"
+              >
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="password">Parol</label>
+                <input type="password" id="password" name="password" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="confirmPassword">Parolni tasdiqlang</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <h2>Shaxsiy ma'lumotlar</h2>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">Ism</label>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  name="firstName" 
+                  required 
+                  value="<%= typeof firstName !== 'undefined' ? firstName : '' %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="lastName">Familiya</label>
+                <input 
+                  type="text" 
+                  id="lastName" 
+                  name="lastName" 
+                  required 
+                  value="<%= typeof lastName !== 'undefined' ? lastName : '' %>"
+                >
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Telefon raqami</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                required 
+                value="<%= typeof phone !== 'undefined' ? phone : '' %>"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label>Hisob turi</label>
+              <div class="radio-group">
+                <label class="radio-label">
+                  <input 
+                    type="radio" 
+                    name="accountType" 
+                    value="individual" 
+                    <%= typeof accountType !== 'undefined' && accountType === 'individual' ? 'checked' : '' %>
+                    <%= typeof accountType === 'undefined' ? 'checked' : '' %>
+                  >
+                  Jismoniy shaxs
+                </label>
+                <label class="radio-label">
+                  <input 
+                    type="radio" 
+                    name="accountType" 
+                    value="business"
+                    <%= typeof accountType !== 'undefined' && accountType === 'business' ? 'checked' : '' %>
+                  >
+                  Tashkilot
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group business-field" id="businessNameField">
+              <label for="businessName">Tashkilot nomi</label>
+              <input 
+                type="text" 
+                id="businessName" 
+                name="businessName" 
+                value="<%= typeof businessName !== 'undefined' ? businessName : '' %>"
+              >
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <h2>Manzil</h2>
+            
+            <div class="form-group">
+              <label for="street">Ko‘cha manzili</label>
+              <input 
+                type="text" 
+                id="street" 
+                name="street" 
+                value="<%= typeof street !== 'undefined' ? street : '' %>"
+              >
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">Shahar</label>
+                <input 
+                  type="text" 
+                  id="city" 
+                  name="city" 
+                  value="<%= typeof city !== 'undefined' ? city : '' %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="state">Viloyat / Hudud</label>
+                <input 
+                  type="text" 
+                  id="state" 
+                  name="state" 
+                  value="<%= typeof state !== 'undefined' ? state : '' %>"
+                >
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="zipCode">Pochta indeksi</label>
+                <input 
+                  type="text" 
+                  id="zipCode" 
+                  name="zipCode" 
+                  value="<%= typeof zipCode !== 'undefined' ? zipCode : '' %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="country">Mamlakat</label>
+                <input 
+                  type="text" 
+                  id="country" 
+                  name="country" 
+                  value="<%= typeof country !== 'undefined' ? country : '' %>"
+                >
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-block">Hisob yaratish</button>
+          </div>
+        </form>
+        
+        <div class="auth-links text-center mt-4">
+          <p>Allaqachon hisobingiz bormi? <a href="/login">Kiring</a></p>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script>
+    // Hisob turi bo‘yicha tashkilot nomini ko‘rsatish/yashirish
+    document.addEventListener('DOMContentLoaded', function() {
+      const accountTypeRadios = document.querySelectorAll('input[name="accountType"]');
+      const businessNameField = document.getElementById('businessNameField');
+      
+      function toggleBusinessField() {
+        const selectedType = document.querySelector('input[name="accountType"]:checked').value;
+        businessNameField.style.display = selectedType === 'business' ? 'block' : 'none';
+      }
+      
+      // Boshlang‘ich holatni o‘rnatish
+      toggleBusinessField();
+      
+      // O‘zgarishlar uchun kuzatuv
+      accountTypeRadios.forEach(radio => {
+        radio.addEventListener('change', toggleBusinessField);
+      });
+    });
+  </script>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

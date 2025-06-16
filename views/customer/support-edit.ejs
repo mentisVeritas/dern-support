@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yordam So‘rovini Tahrirlash - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="support-edit-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Yordam So‘rovini Tahrirlash</h1>
+        <a href="/customer/support/<%= supportRequest._id %>" class="btn btn-secondary btn-sm">So‘rovga qaytish</a>
+      </div>
+      
+      <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-error">
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <div class="form-container">
+        <form action="/customer/support/<%= supportRequest._id %>" method="POST" class="support-form">
+          <div class="form-section">
+            <h2>So‘rov tafsilotlari</h2>
+            
+            <div class="form-group">
+              <label for="title">Sarlavha</label>
+              <input 
+                type="text" 
+                id="title" 
+                name="title" 
+                required 
+                value="<%= supportRequest.title %>"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="description">Tavsif</label>
+              <textarea 
+                id="description" 
+                name="description" 
+                rows="6" 
+                required
+              ><%= supportRequest.description %></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="deviceType">Qurilma turi</label>
+                <select id="deviceType" name="deviceType" required>
+                  <option value="desktop" <%= supportRequest.deviceType === 'desktop' ? 'selected' : '' %>>Stol kompyuteri</option>
+                  <option value="laptop" <%= supportRequest.deviceType === 'laptop' ? 'selected' : '' %>>Noutbuk</option>
+                  <option value="tablet" <%= supportRequest.deviceType === 'tablet' ? 'selected' : '' %>>Planshet</option>
+                  <option value="smartphone" <%= supportRequest.deviceType === 'smartphone' ? 'selected' : '' %>>Smartfon</option>
+                  <option value="printer" <%= supportRequest.deviceType === 'printer' ? 'selected' : '' %>>Printer</option>
+                  <option value="server" <%= supportRequest.deviceType === 'server' ? 'selected' : '' %>>Server</option>
+                  <option value="network" <%= supportRequest.deviceType === 'network' ? 'selected' : '' %>>Tarmoq uskunalari</option>
+                  <option value="other" <%= supportRequest.deviceType === 'other' ? 'selected' : '' %>>Boshqa</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="urgency">Shoshilinchlik</label>
+                <select id="urgency" name="urgency" required>
+                  <option value="low" <%= supportRequest.urgency === 'low' ? 'selected' : '' %>>Past - Shoshilinch emas</option>
+                  <option value="medium" <%= supportRequest.urgency === 'medium' ? 'selected' : '' %>>O‘rtacha - Tez orada e'tibor kerak</option>
+                  <option value="high" <%= supportRequest.urgency === 'high' ? 'selected' : '' %>>Yuqori - Shoshilinch muammo</option>
+                  <option value="critical" <%= supportRequest.urgency === 'critical' ? 'selected' : '' %>>Jiddiy - Favqulodda holat</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="location">Xizmat ko‘rsatish joyi</label>
+              <select id="location" name="location">
+                <option value="">Farqi yo‘q</option>
+                <option value="onsite" <%= supportRequest.location === 'onsite' ? 'selected' : '' %>>Joyida (sizning manzilingizda)</option>
+                <option value="office" <%= supportRequest.location === 'office' ? 'selected' : '' %>>Bizning ofisimizda</option>
+                <option value="remote" <%= supportRequest.location === 'remote' ? 'selected' : '' %>>Masofadan turib yordam</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Yordam so‘rovini yangilash</button>
+            <a href="/customer/support/<%= supportRequest._id %>" class="btn btn-secondary">Bekor qilish</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

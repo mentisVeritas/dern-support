@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mening Profilim - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <%- include('../partials/header') %>
+  
+  <main class="profile-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Mening Profilim</h1>
+        <a href="/customer/dashboard" class="btn btn-secondary btn-sm">Boshqaruvga qaytish</a>
+      </div>
+      
+      <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-error">
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <% if (typeof success !== 'undefined') { %>
+        <div class="alert alert-success">
+          <%= success %>
+        </div>
+      <% } %>
+      
+      <div class="profile-container">
+        <form action="/customer/profile" method="POST" class="profile-form">
+          <div class="form-section">
+            <h2>Shaxsiy Ma'lumotlar</h2>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">Ism</label>
+                <input 
+                  type="text" 
+                  id="firstName" 
+                  name="firstName" 
+                  required 
+                  value="<%= user.firstName %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="lastName">Familiya</label>
+                <input 
+                  type="text" 
+                  id="lastName" 
+                  name="lastName" 
+                  required 
+                  value="<%= user.lastName %>"
+                >
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Elektron pochta</label>
+              <input 
+                type="email" 
+                id="email" 
+                value="<%= user.email %>"
+                disabled
+              >
+              <p class="field-note">Emailni o‘zgartirish mumkin emas. Agar o‘zgartirish zarur bo‘lsa, texnik xizmatga murojaat qiling.</p>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Telefon raqam</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                required 
+                value="<%= user.phone %>"
+              >
+            </div>
+            
+            <% if (user.accountType === 'business') { %>
+              <div class="form-group">
+                <label for="businessName">Biznes nomi</label>
+                <input 
+                  type="text" 
+                  id="businessName" 
+                  name="businessName" 
+                  value="<%= user.businessName || '' %>"
+                >
+              </div>
+            <% } %>
+          </div>
+          
+          <div class="form-section">
+            <h2>Manzil</h2>
+            
+            <div class="form-group">
+              <label for="street">Ko‘cha manzili</label>
+              <input 
+                type="text" 
+                id="street" 
+                name="street" 
+                value="<%= user.address ? user.address.street || '' : '' %>"
+              >
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">Shahar</label>
+                <input 
+                  type="text" 
+                  id="city" 
+                  name="city" 
+                  value="<%= user.address ? user.address.city || '' : '' %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="state">Viloyat / Hudud</label>
+                <input 
+                  type="text" 
+                  id="state" 
+                  name="state" 
+                  value="<%= user.address ? user.address.state || '' : '' %>"
+                >
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="zipCode">Pochta indeksi</label>
+                <input 
+                  type="text" 
+                  id="zipCode" 
+                  name="zipCode" 
+                  value="<%= user.address ? user.address.zipCode || '' : '' %>"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="country">Davlat</label>
+                <input 
+                  type="text" 
+                  id="country" 
+                  name="country" 
+                  value="<%= user.address ? user.address.country || '' : '' %>"
+                >
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-section">
+            <h2>Parol</h2>
+            <p>Agar parolni o‘zgartirmoqchi bo‘lmasangiz, maydonlarni bo‘sh qoldiring.</p>
+            
+            <div class="form-group">
+              <label for="currentPassword">Joriy parol</label>
+              <input 
+                type="password" 
+                id="currentPassword" 
+                name="currentPassword"
+              >
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="newPassword">Yangi parol</label>
+                <input 
+                  type="password" 
+                  id="newPassword" 
+                  name="newPassword"
+                >
+              </div>
+              
+              <div class="form-group">
+                <label for="confirmPassword">Yangi parolni tasdiqlang</label>
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  name="confirmPassword"
+                >
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Profilni yangilash</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>

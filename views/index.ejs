@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dern-Support - Professional IT Qo‘llab-quvvatlash Xizmatlari</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="landing-page">
+  <%- include('partials/header') %>
+  
+  <main>
+    <!-- Qahramon Bo‘limi -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content fade-in">
+          <div class="hero-text">
+            <h1>Kerak bo‘lganda Professional IT Qo‘llab-quvvatlash</h1>
+            <p>
+              Barcha qurilmangiz va tizimlaringiz uchun mutaxassis texnik yordam oling.
+              Tez, ishonchli va professional xizmat — 24/7 mavjud.
+            </p>
+            <div class="cta-buttons">
+              <% if (currentUser) { %>
+                <a href="/customer/support/new" class="btn btn-primary btn-lg">
+                  <i class="fas fa-plus"></i> Qo‘llab-quvvatlash so‘rovi yuborish
+                </a>
+                <a href="/customer/dashboard" class="btn btn-outline-primary btn-lg">
+                  <i class="fas fa-tachometer-alt"></i> Mening Panelim
+                </a>
+              <% } else { %>
+                <a href="/guest-support" class="btn btn-primary btn-lg">
+                  <i class="fas fa-headset"></i> Tez yordam oling
+                </a>
+                <a href="/signup" class="btn btn-outline-primary btn-lg">
+                  <i class="fas fa-user-plus"></i> Hisob yaratish
+                </a>
+              <% } %>
+            </div>
+          </div>
+          <div class="hero-image">
+            <div class="hero-stats">
+              <div class="stat slide-up">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Mavjud Qo‘llab-quvvatlash</div>
+              </div>
+              <div class="stat slide-up" style="animation-delay: 0.1s;">
+                <div class="stat-number">1000+</div>
+                <div class="stat-label">Baxtli mijozlar</div>
+              </div>
+              <div class="stat slide-up" style="animation-delay: 0.2s;">
+                <div class="stat-number">15min</div>
+                <div class="stat-label">O‘rtacha javob vaqti</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Xizmatlar Bo‘limi -->
+    <section id="services" class="services">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Bizning Mutaxassis Xizmatlarimiz</h2>
+          <p>Texnologiya ehtiyojlaringiz uchun keng qamrovli IT qo‘llab-quvvatlash yechimlari</p>
+        </div>
+        <div class="service-grid">
+          <div class="service-card slide-up">
+            <div class="service-icon">
+              <i class="fas fa-desktop"></i>
+            </div>
+            <h3>Kompyuter Ta’miri</h3>
+            <p>Stol va noutbuklar uchun apparat va dasturiy ta’minot muammolarini hal qilish. Tez tashxis va professional yechimlar.</p>
+            <ul class="service-features">
+              <li><i class="fas fa-check"></i> Apparatura tashxisi</li>
+              <li><i class="fas fa-check"></i> Dasturiy muammolarni bartaraf etish</li>
+              <li><i class="fas fa-check"></i> Ma’lumotlarni tiklash</li>
+            </ul>
+          </div>
+          <div class="service-card slide-up" style="animation-delay: 0.1s;">
+            <div class="service-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3>Mobil Qo‘llab-quvvatlash</h3>
+            <p>Smartfon va planshetlarga xizmat ko‘rsatish va ta’mirlash. Har qanday mobil qurilmalar uchun mutaxassis yordam.</p>
+            <ul class="service-features">
+              <li><i class="fas fa-check"></i> Ekran ta’mirlash</li>
+              <li><i class="fas fa-check"></i> Dasturiy muammolar</li>
+              <li><i class="fas fa-check"></i> Ma’lumotlarni ko‘chirish</li>
+            </ul>
+          </div>
+          <div class="service-card slide-up" style="animation-delay: 0.2s;">
+            <div class="service-icon">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <h3>Tarmoq Sozlamalari</h3>
+            <p>Uy va bizneslar uchun tarmoq konfiguratsiyasi, xavfsizlik va bog‘lanish yechimlari.</p>
+            <ul class="service-features">
+              <li><i class="fas fa-check"></i> WiFi sozlamalari</li>
+              <li><i class="fas fa-check"></i> Xavfsizlik o‘rnatilishi</li>
+              <li><i class="fas fa-check"></i> Ishlashni optimallashtirish</li>
+            </ul>
+          </div>
+          <div class="service-card slide-up" style="animation-delay: 0.3s;">
+            <div class="service-icon">
+              <i class="fas fa-tools"></i>
+            </div>
+            <h3>Tizimni Ta’mirlash</h3>
+            <p>Doimiy xizmat va optimallashtirish, tizimlaringiz mukammal ishlashi uchun.</p>
+            <ul class="service-features">
+              <li><i class="fas fa-check"></i> Doimiy tekshiruvlar</li>
+              <li><i class="fas fa-check"></i> Ishlashni sozlash</li>
+              <li><i class="fas fa-check"></i> Xavfsizlik yangilanishlari</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Qanday ishlaydi bo‘limi -->
+    <section class="how-it-works">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Qanday Ishlaydi</h2>
+          <p>Faqat bir necha oddiy qadamda yordam oling</p>
+        </div>
+        <div class="steps">
+          <div class="step slide-up">
+            <div class="step-number">1</div>
+            <h3>So‘rov yuboring</h3>
+            <p>Mushkulingizni oddiy shaklda tushuntiring. Tez yordam uchun hisob kerak emas.</p>
+          </div>
+          <div class="step slide-up" style="animation-delay: 0.1s;">
+            <div class="step-number">2</div>
+            <h3>Mutaxassis tayinlanadi</h3>
+            <p>Sizning muammoingizga mos eng yaxshi texnikni bir necha daqiqada tayinlaymiz.</p>
+          </div>
+          <div class="step slide-up" style="animation-delay: 0.2s;">
+            <div class="step-number">3</div>
+            <h3>Yordam oling</h3>
+            <p>Telefon, masofadan kirish yoki o‘rinda ko‘mak ko‘rsatamiz.</p>
+          </div>
+          <div class="step slide-up" style="animation-delay: 0.3s;">
+            <div class="step-number">4</div>
+            <h3>Muammo hal qilindi</h3>
+            <p>Mushkulotingiz tez va professional tarzda hal qilinadi, keyingi yordam bilan.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tez yordam CTA -->
+    <section class="knowledge-base-preview">
+      <div class="container">
+        <div class="fade-in">
+          <h2>Darhol yordam kerakmi?</h2>
+          <p>Kuting - mutaxassis yordamini hoziroq oling. Favqulodda yordam uchun ro‘yxatdan o‘tish shart emas.</p>
+          <% if (!currentUser) { %>
+            <a href="/guest-support" class="btn btn-success btn-lg">
+              <i class="fas fa-bolt"></i> Tez yordam oling
+            </a>
+          <% } else { %>
+            <a href="/customer/support/new" class="btn btn-success btn-lg">
+              <i class="fas fa-plus"></i> Qo‘llab-quvvatlash so‘rovi yaratish
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nima uchun biz? -->
+    <section class="testimonials">
+      <div class="container">
+        <div class="section-header fade-in">
+          <h2>Nega Dern-Supportni tanlash kerak?</h2>
+          <p>Dunyo bo‘ylab minglab mijozlar bizga ishonadi</p>
+        </div>
+        <div class="testimonial-slider">
+          <div class="testimonial">
+            <div class="feature-grid">
+              <div class="feature-item slide-up">
+                <i class="fas fa-clock"></i>
+                <h3>24/7 Mavjudlik</h3>
+                <p>Kerak paytda doimiy texnik yordam. Favqulodda qo‘llab-quvvatlash ham mavjud.</p>
+              </div>
+              <div class="feature-item slide-up" style="animation-delay: 0.1s;">
+                <i class="fas fa-user-tie"></i>
+                <h3>Mutaxassis Texniklar</h3>
+                <p>Barcha asosiy texnologiyalar bo‘yicha sertifikatlangan mutaxassislar.</p>
+              </div>
+              <div class="feature-item slide-up" style="animation-delay: 0.2s;">
+                <i class="fas fa-tachometer-alt"></i>
+                <h3>Tez Javob</h3>
+                <p>O‘rtacha javob vaqti 15 daqiqa. Ishni tez hal qilish orqali vaqtni tejash.</p>
+              </div>
+              <div class="feature-item slide-up" style="animation-delay: 0.3s;">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Xavfsiz va Ishonchli</h3>
+                <p>Ma’lumotlaringiz xavfsiz. Masofadan kirish va maxfiy xizmat kafolatlangan.</p>
+              </div>
+              <div class="feature-item slide-up" style="animation-delay: 0.4s;">
+                <i class="fas fa-dollar-sign"></i>
+                <h3>Shaffof Narxlar</h3>
+                <p>Oldindan aniq narxlar, yashirin to‘lovlarsiz. Narxni oldindan biling.</p>
+              </div>
+              <div class="feature-item slide-up" style="animation-delay: 0.5s;">
+                <i class="fas fa-medal"></i>
+                <h3>Qoniqish Kafolati</h3>
+                <p>100% qoniqish kafolati. Siz baxtli bo‘lishingizgacha biz ham baxtlimiz.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <%- include('partials/footer') %>
+  
+  <script>
+    // Animatsiyalar uchun Intersection Observer
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, observerOptions);
+
+    // Animatsiya elementlarini kuzatish
+    document.querySelectorAll('.fade-in, .slide-up').forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+
+    // Anchors uchun yumshoq scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // CTA tugmalariga yuklanish holatini qo‘shish
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        if (this.href && !this.href.includes('#')) {
+          const originalText = this.innerHTML;
+          this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuklanmoqda...';
+          this.style.pointerEvents = 'none';
+          
+          // 3 soniyadan keyin tiklash, agar sahifa o‘zgarmasa
+          setTimeout(() => {
+            this.innerHTML = originalText;
+            this.style.pointerEvents = 'auto';
+          }, 3000);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xatolik - Dern-Support</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .error-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      text-align: center;
+    }
+    
+    .error-container {
+      max-width: 600px;
+      padding: 2rem;
+    }
+    
+    .error-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+    
+    .error-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .error-description {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+    
+    .error-details {
+      background: rgba(255,255,255,0.1);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+      font-family: monospace;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    
+    .error-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn-white {
+      background: white;
+      color: #dc3545;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      color: #dc3545;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-page">
+    <div class="error-container">
+      <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h1 class="error-title">Xatolik Yuz Berdi</h1>
+      <p class="error-description">
+        Kechirasiz, kutilmagan xatolik yuz berdi. 
+        Iltimos, keyinroq qayta urinib ko'ring yoki yordam xizmatiga murojaat qiling.
+      </p>
+      
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="error-details">
+          <strong>Xatolik tafsilotlari:</strong><br>
+          <%= error.message || error %>
+        </div>
+      <% } %>
+      
+      <div class="error-actions">
+        <a href="/" class="btn-white">
+          <i class="fas fa-home"></i> Bosh Sahifa
+        </a>
+        <a href="/guest-support" class="btn-white">
+          <i class="fas fa-headset"></i> Yordam Olish
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

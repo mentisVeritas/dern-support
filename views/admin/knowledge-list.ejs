@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilimlar Bazasini Boshqarish - Dern-Yordam Admin</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partials/admin-header', { currentPage: 'knowledge' }) %>
+
+  
+  <main class="knowledge-list-page">
+    <div class="container">
+      <div class="page-header">
+        <h1>Bilimlar Bazasini Boshqarish</h1>
+        <div class="page-actions">
+          <a href="/admin/dashboard" class="btn btn-secondary btn-sm">Boshqaruv Paneliga Qaytish</a>
+          <a href="/knowledge/admin/new" class="btn btn-primary btn-sm">Yangi Maqola Qo‘shish</a>
+        </div>
+      </div>
+      
+      <div class="articles-container">
+        <% if (typeof articles === 'undefined' || articles.length === 0) { %>
+          <div class="empty-state">
+            <h2>Hech qanday maqola topilmadi</h2>
+            <p>Tizimda hali bilimlar bazasi maqolalari mavjud emas.</p>
+            <a href="/knowledge/admin/new" class="btn btn-primary">Birinchi Maqolangizni Yaratish</a>
+          </div>
+        <% } else { %>
+          <div class="table-responsive">
+            <table class="articles-table">
+              <thead>
+                <tr>
+                  <th>Sarlavha</th>
+                  <th>Kategoriya</th>
+                  <th>Qurilma Turlari</th>
+                  <th>Ko‘rishlar</th>
+                  <th>Holati</th>
+                  <th>Yaratilgan</th>
+                  <th>Amallar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% articles.forEach(article => { %>
+                  <tr>
+                    <td><%= article.title %></td>
+                    <td>
+                      <%= article.category === 'hardware' ? 'Uskuna' :
+                          article.category === 'software' ? 'Dasturiy Ta\'minot' :
+                          article.category === 'network' ? 'Tarmoq' :
+                          article.category === 'security' ? 'Xavfsizlik' :
+                          article.category === 'maintenance' ? 'Texnik Xizmat' :
+                          article.category === 'troubleshooting' ? 'Muammolarni Hal Qilish' :
+                          article.category === 'other' ? 'Boshqa' : article.category %>
+                    </td>
+                    <td>
+                      <% if (article.deviceTypes && article.deviceTypes.length > 0) { %>
+                        <%= article.deviceTypes.slice(0, 2).map(type => 
+                          type === 'desktop' ? 'Ish stoli kompyuteri' :
+                          type === 'laptop' ? 'Noutbuk' :
+                          type === 'tablet' ? 'Planshet' :
+                          type === 'smartphone' ? 'Smartfon' :
+                          type === 'printer' ? 'Printer' :
+                          type === 'server' ? 'Server' :
+                          type === 'network' ? 'Tarmoq' :
+                          type === 'other' ? 'Boshqa' : type
+                        ).join(', ') %>
+                        <% if (article.deviceTypes.length > 2) { %>
+                          +<%= article.deviceTypes.length - 2 %> ta ko‘proq
+                        <% } %>
+                      <% } else { %>
+                        Barchasi
+                      <% } %>
+                    </td>
+                    <td><%= article.viewCount %></td>
+                    <td>
+                      <span class="badge <%= article.isPublished ? 'status-published' : 'status-draft' %>">
+                        <%= article.isPublished ? 'Nashr qilingan' : 'Qoralama' %>
+                      </span>
+                    </td>
+                    <td><%= new Date(article.createdAt).toLocaleDateString('uz-UZ') %></td>
+                    <td>
+                      <div class="action-buttons">
+                        <a href="/knowledge/admin/<%= article._id %>/edit" class="btn btn-secondary btn-sm">Tahrirlash</a>
+                        <form action="/knowledge/admin/<%= article._id %>?_method=DELETE" method="POST" class="inline-form" onsubmit="return confirm('Ushbu maqolani o‘chirishga ishonchingiz komilmi? Bu amal qaytarib bo‘lmaydi.');">
+                          <button type="submit" class="btn btn-danger btn-sm">O‘chirish</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/admin-footer') %>
+  
+  <script src="/js/main.js"></script>
+</body>
+</html>
