@@ -21,10 +21,13 @@
         <h2><%= supportRequest.title || supportRequest.requestType || 'Yordam So‘rovi' %></h2>
         <div class="support-meta">
           <span class="status <%= supportRequest.status %>">
-            <%= supportRequest.status === 'resolved' ? 'Hal Qilingan' :
-                supportRequest.status === 'in-progress' ? 'Jarayonda' :
-                supportRequest.status === 'pending' ? 'Kutilmoqda' : 
-                supportRequest.status.charAt(0).toUpperCase() + supportRequest.status.slice(1) %>
+            <%= (function() {
+              if (supportRequest.status === 'resolved') return 'Hal Qilingan';
+              if (supportRequest.status === 'in-progress') return 'Jarayonda';
+              if (supportRequest.status === 'pending') return 'Kutilmoqda';
+              if (typeof supportRequest.status === 'string') return supportRequest.status.charAt(0).toUpperCase() + supportRequest.status.slice(1);
+              return '';
+            })() %>
           </span>
           <span class="created-date">
             Yaratilgan: <%= new Date(supportRequest.createdAt).toLocaleDateString('uz-UZ') %>
@@ -90,14 +93,19 @@
               <div class="detail-item">
                 <span class="detail-label">Qurilma Turi:</span>
                 <span class="detail-value">
-                  <%= supportRequest.deviceType === 'desktop' ? 'Ish stoli kompyuteri' :
-                      supportRequest.deviceType === 'laptop' ? 'Noutbuk' :
-                      supportRequest.deviceType === 'tablet' ? 'Planshet' :
-                      supportRequest.deviceType === 'smartphone' ? 'Smartfon' :
-                      supportRequest.deviceType === 'printer' ? 'Printer' :
-                      supportRequest.deviceType === 'server' ? 'Server' :
-                      supportRequest.deviceType === 'network' ? 'Tarmoq' :
-                      supportRequest.deviceType === 'other' ? 'Boshqa' : supportRequest.deviceType %>
+                  <%= (function() {
+                    switch(supportRequest.deviceType) {
+                      case 'desktop': return 'Ish stoli kompyuteri';
+                      case 'laptop': return 'Noutbuk';
+                      case 'tablet': return 'Planshet';
+                      case 'smartphone': return 'Smartfon';
+                      case 'printer': return 'Printer';
+                      case 'server': return 'Server';
+                      case 'network': return 'Tarmoq';
+                      case 'other': return 'Boshqa';
+                      default: return supportRequest.deviceType;
+                    }
+                  })() %>
                 </span>
               </div>
             <% } %>
@@ -106,10 +114,13 @@
               <div class="detail-item">
                 <span class="detail-label">Shoshilinchlik:</span>
                 <span class="detail-value urgency <%= supportRequest.urgency %>">
-                  <%= supportRequest.urgency === 'high' ? 'Yuqori' :
-                      supportRequest.urgency === 'medium' ? 'O‘rta' :
-                      supportRequest.urgency === 'low' ? 'Past' : 
-                      supportRequest.urgency.charAt(0).toUpperCase() + supportRequest.urgency.slice(1) %>
+                  <%= (function() {
+                    if (supportRequest.urgency === 'high') return 'Yuqori';
+                    if (supportRequest.urgency === 'medium') return 'O‘rta';
+                    if (supportRequest.urgency === 'low') return 'Past';
+                    if (typeof supportRequest.urgency === 'string') return supportRequest.urgency.charAt(0).toUpperCase() + supportRequest.urgency.slice(1);
+                    return '';
+                  })() %>
                 </span>
               </div>
             <% } %>
@@ -225,11 +236,21 @@
         <% } %>
       </div>
       
-      <% if (!viewOnly) { %>
+      <% if (typeof canChangeStatus !== 'undefined' ? canChangeStatus : !viewOnly) { %>
         <div class="support-actions">
-          <div class="alert alert-info">
-            <strong>Eslatma:</strong> Bu admin foydalanuvchilar uchun faqat ko‘rish interfeysi. O‘zgartirishlar kiritish uchun Master administratoriga murojaat qiling.
-          </div>
+          <!-- Форма для изменения статуса (только для admin) -->
+          <form action="/admin/support/<%= supportRequest._id %>/status" method="POST" class="mb-2">
+            <div class="form-group">
+              <label for="status">Holatini o'zgartirish:</label>
+              <select name="status" id="status" class="form-control form-control-sm" required>
+                <option value="pending" <%= supportRequest.status === 'pending' ? 'selected' : '' %>>Kutilmoqda</option>
+                <option value="in-progress" <%= supportRequest.status === 'in-progress' ? 'selected' : '' %>>Jarayonda</option>
+                <option value="resolved" <%= supportRequest.status === 'resolved' ? 'selected' : '' %>>Hal Qilingan</option>
+                <option value="closed" <%= supportRequest.status === 'closed' ? 'selected' : '' %>>Yopilgan</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success btn-sm">Saqlash</button>
+          </form>
         </div>
       <% } %>
     </div>

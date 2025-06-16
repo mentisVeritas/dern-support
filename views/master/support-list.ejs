@@ -25,116 +25,8 @@
         </div>
 
         <div class="row">
-            <!-- Foydalanuvchi Ma'lumotlari Kartasi -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5><i class="fas fa-id-card"></i> Foydalanuvchi Ma'lumotlari</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <div class="avatar-large">
-                                <%= user.firstName.charAt(0) + user.lastName.charAt(0) %>
-                            </div>
-                            <h4 class="mt-2"><%= user.firstName %> <%= user.lastName %></h4>
-                            <div class="user-role-badges">
-                                <% if (user.isMaster) { %>
-                                    <span class="badge badge-danger">
-                                        <i class="fas fa-crown"></i> Bosh Administrator
-                                    </span>
-                                <% } else if (user.isAdmin) { %>
-                                    <span class="badge badge-warning">
-                                        <i class="fas fa-user-shield"></i> Administrator
-                                    </span>
-                                <% } else { %>
-                                    <span class="badge badge-success">
-                                        <i class="fas fa-user"></i> Mijoz
-                                    </span>
-                                <% } %>
-                                <span class="badge badge-<%= user.accountType === 'business' ? 'primary' : 'secondary' %>">
-                                    <i class="fas fa-<%= user.accountType === 'business' ? 'building' : 'user' %>"></i>
-                                    <%= user.accountType === 'business' ? 'Biznes' : 'Shaxsiy' %>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="user-details">
-                            <div class="detail-item">
-                                <strong><i class="fas fa-envelope"></i> Email:</strong>
-                                <span><%= user.email %></span>
-                            </div>
-                            <div class="detail-item">
-                                <strong><i class="fas fa-user-tag"></i> Foydalanuvchi nomi:</strong>
-                                <span><%= user.username || 'Belgilanmagan' %></span>
-                            </div>
-                            <div class="detail-item">
-                                <strong><i class="fas fa-phone"></i> Telefon:</strong>
-                                <span><%= user.phone || 'Berilmagan' %></span>
-                            </div>
-                            <% if (user.businessName) { %>
-                            <div class="detail-item">
-                                <strong><i class="fas fa-building"></i> Biznes:</strong>
-                                <span><%= user.businessName %></span>
-                            </div>
-                            <% } %>
-                            <div class="detail-item">
-                                <strong><i class="fas fa-calendar-alt"></i> Qo'shilgan:</strong>
-                                <span><%= new Date(user.createdAt).toLocaleDateString('uz-UZ') %></span>
-                            </div>
-                            <div class="detail-item">
-                                <strong><i class="fas fa-clock"></i> Oxirgi Kirish:</strong>
-                                <span><%= user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('uz-UZ') : 'Hech qachon' %></span>
-                            </div>
-                            <div class="detail-item">
-                                <strong><i class="fas fa-check-circle"></i> Holat:</strong>
-                                <% if (user.isEmailVerified) { %>
-                                    <span class="badge badge-success">Tasdiqlangan</span>
-                                <% } else { %>
-                                    <span class="badge badge-warning">Tasdiqlanmagan</span>
-                                <% } %>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Foydalanuvchi Statistikasi Kartasi -->
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h5><i class="fas fa-chart-bar"></i> Yordam Statistikasi</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="stat-item">
-                                    <h4 class="text-primary"><%= userRequestStats.total %></h4>
-                                    <small>Jami So'rovlar</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="stat-item">
-                                    <h4 class="text-success"><%= userRequestStats.resolved %></h4>
-                                    <small>Hal Qilingan</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="stat-item">
-                                    <h4 class="text-info"><%= userRequestStats.pending %></h4>
-                                    <small>Kutilmoqda</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="stat-item">
-                                    <h4 class="text-danger"><%= userRequestStats.rejected %></h4>
-                                    <small>Rad Etilgan</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Yordam So'rovlari Tarixi -->
-            <div class="col-md-8">
+            <!-- Yordam So'rovlari Tarixi (Master: только список заявок) -->
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <h5><i class="fas fa-ticket-alt"></i> Yordam So'rovlari Tarixi</h5>
@@ -145,7 +37,7 @@
                             <div class="text-center text-muted py-5">
                                 <i class="fas fa-inbox fa-3x mb-3"></i>
                                 <h5>Yordam So'rovlari Yo'q</h5>
-                                <p>Bu foydalanuvchi hali hech qanday yordam so'rovi yubormagan.</p>
+                                <p>Hali hech qanday yordam so'rovi yuborilmagan.</p>
                             </div>
                         <% } else { %>
                             <div class="table-responsive">
@@ -168,7 +60,7 @@
                                                 <td><code><%= request._id.toString().slice(-6) %></code></td>
                                                 <td>
                                                     <strong><%= request.title %></strong>
-                                                    <br><small class="text-muted"><%= request.description.substring(0, 50) %>...</small>
+                                                    <br><small class="text-muted"><%= request.description ? request.description.substring(0, 50) : '' %>...</small>
                                                 </td>
                                                 <td>
                                                     <span class="badge badge-info">

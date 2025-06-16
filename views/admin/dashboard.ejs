@@ -5,132 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Boshqaruv Paneli - Dern-Yordam</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/admin-styles.css">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background: #f4f6fa; }
+    .dashboard-header h1 { font-weight: 700; letter-spacing: 1px; }
+    .stat-card { box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.15s; }
+    .stat-card:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 4px 24px rgba(0,123,255,0.10); }
+    .stat-value { font-size: 2.5rem; color: #007bff; }
+    .stat-label { font-size: 1.1rem; color: #495057; margin-bottom: 0.5rem; }
+    .stat-link { font-size: 0.95rem; color: #007bff; text-decoration: none; }
+    .stat-link:hover { text-decoration: underline; }
+    .dashboard-section { background: #fff; border-radius: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 1.5rem 1.5rem 1rem 1.5rem; margin-bottom: 2rem; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .section-header h2 { font-size: 1.3rem; font-weight: 600; color: #007bff; margin: 0; }
+    .view-all { font-size: 0.95rem; color: #007bff; text-decoration: none; }
+    .view-all:hover { text-decoration: underline; }
+    .appointment-card, .part-card { background: #f8f9fa; border-radius: 0.4rem; box-shadow: 0 1px 4px rgba(0,0,0,0.03); padding: 1rem; margin-bottom: 1rem; }
+    .appointment-card h3, .part-card h3 { font-size: 1.1rem; margin: 0 0 0.5rem 0; }
+    .appointment-time { font-size: 1.2rem; color: #007bff; font-weight: 600; }
+    .customer-info { font-size: 0.95rem; color: #495057; margin-bottom: 0.3rem; }
+    .appointment-meta { font-size: 0.9rem; color: #6c757d; }
+    .appointment-meta .status { margin-left: 0.5rem; font-weight: 600; }
+    .part-card.low-stock { border-left: 4px solid #dc3545; }
+    .part-stock { font-size: 1rem; margin-bottom: 0.3rem; }
+    .part-meta { font-size: 0.95rem; color: #6c757d; }
+    .table th, .table td { vertical-align: middle !important; }
+    .badge { font-size: 0.85rem; padding: 0.5em 0.7em; }
+    .btn-outline-primary { border-radius: 20px; font-size: 0.95rem; }
+    .empty-state { color: #adb5bd; font-size: 1.1rem; padding: 2.5rem 0; }
+    @media (max-width: 991px) { .dashboard-section { padding: 1rem; } }
+  </style>
 </head>
 <body>
   <%- include('../partials/admin-header', { currentPage: 'dashboard' }) %>
-  
   <div class="dashboard-content">
-    <div class="dashboard-header">
-      <h1>Admin Boshqaruv Paneli</h1>
+    <div class="dashboard-header mb-4">
+      <h1><i class="fa-solid fa-gauge-high mr-2"></i>Admin Boshqaruv Paneli</h1>
       <p class="text-muted">Tizim ma'lumotlariga faqat ko‘rish uchun ruxsat</p>
     </div>
-    
-    <div class="row">
-      <div class="col-md-3">
+    <div class="row stats-cards mb-4">
+      <div class="col-md-3 mb-3">
         <div class="stat-card">
-          <div class="stat-value"><%= pendingRequestsCount %></div>
+          <div class="stat-value"><i class="fa-solid fa-hourglass-half mr-2"></i><%= pendingRequestsCount %></div>
           <div class="stat-label">Kutilayotgan So‘rovlar</div>
           <a href="/admin/support?status=pending" class="stat-link">Barchasini Ko‘rish</a>
         </div>
       </div>
-      
-      <div class="col-md-3">
+      <div class="col-md-3 mb-3">
         <div class="stat-card">
-          <div class="stat-value"><%= inProgressRequestsCount %></div>
+          <div class="stat-value"><i class="fa-solid fa-spinner mr-2"></i><%= inProgressRequestsCount %></div>
           <div class="stat-label">Jarayonda</div>
           <a href="/admin/support?status=in-progress" class="stat-link">Barchasini Ko‘rish</a>
         </div>
       </div>
-      
-      <div class="col-md-3">
+      <div class="col-md-3 mb-3">
         <div class="stat-card">
-          <div class="stat-value"><%= resolvedRequestsCount %></div>
+          <div class="stat-value"><i class="fa-solid fa-circle-check mr-2"></i><%= resolvedRequestsCount %></div>
           <div class="stat-label">Hal Qilingan</div>
           <a href="/admin/support?status=resolved" class="stat-link">Barchasini Ko‘rish</a>
         </div>
       </div>
-      
-      <div class="col-md-3">
+      <div class="col-md-3 mb-3">
         <div class="stat-card">
-          <div class="stat-value"><%= customersCount %></div>
+          <div class="stat-value"><i class="fa-solid fa-users mr-2"></i><%= customersCount %></div>
           <div class="stat-label">Mijozlar</div>
           <a href="/admin/customers" class="stat-link">Barchasini Ko‘rish</a>
         </div>
       </div>
     </div>
-    
     <div class="row">
       <div class="col-md-6">
-        <section class="dashboard-section">
-          <div class="section-header">
-            <h2>Bugungi Uchrashuvlar</h2>
-          </div>
-          
-          <div class="appointments-list">
-            <% if (todayAppointments.length === 0) { %>
-              <div class="empty-state">
-                <p>Bugun uchun uchrashuvlar rejalashtirilmagan.</p>
-              </div>
-            <% } else { %>
-              <% todayAppointments.forEach(appointment => { %>
-                <div class="appointment-card">
-                  <div class="appointment-time">
-                    <%= new Date(appointment.appointmentDate).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'}) %>
-                  </div>
-                  <h3><a href="/admin/support/<%= appointment._id %>"><%= appointment.title %></a></h3>
-                  <div class="customer-info">
-                    <% if (appointment.customer) { %>
-                      <span class="customer-name"><%= appointment.customer.firstName %> <%= appointment.customer.lastName %></span>
-                      <span class="customer-phone"><%= appointment.customer.phone %></span>
-                    <% } else { %>
-                      <span class="customer-name">Mijoz O‘chirilgan</span>
-                      <span class="customer-phone">Mavjud emas</span>
-                    <% } %>
-                  </div>
-                  <div class="appointment-meta">
-                    <span class="device-type"><%= appointment.deviceType %></span>
-                    <span class="status <%= appointment.status %>">
-                      <%= appointment.status === 'resolved' ? 'Hal Qilingan' : appointment.status === 'in-progress' ? 'Jarayonda' : 'Yangi' %>
-                    </span>
-                  </div>
-                </div>
-              <% }) %>
-            <% } %>
-          </div>
-        </section>
       </div>
-      
       <div class="col-md-6">
-        <section class="dashboard-section">
-          <div class="section-header">
-            <h2>Kam Qolgan Ehtiyot Qismlar</h2>
-            <a href="/admin/parts?lowStock=true" class="view-all">Barchasini Ko‘rish</a>
-          </div>
-          
-          <div class="parts-list">
-            <% if (lowStockParts.length === 0) { %>
-              <div class="empty-state">
-                <p>Hozirda kam qolgan ehtiyot qismlar mavjud emas.</p>
-              </div>
-            <% } else { %>
-              <% lowStockParts.forEach(part => { %>
-                <div class="part-card low-stock">
-                  <h3><%= part.name %></h3>
-                  <div class="part-stock">
-                    <span class="stock-label">Zahira:</span>
-                    <span class="stock-value"><%= part.stockQuantity %></span>
-                  </div>
-                  <div class="part-meta">
-                    <span class="part-category"><%= part.category %></span>
-                    <span class="part-price">$<%= part.price.toFixed(2) %></span>
-                  </div>
-                </div>
-              <% }) %>
-            <% } %>
-          </div>
-        </section>
       </div>
     </div>
-    
     <div class="row">
       <div class="col-md-12">
         <section class="dashboard-section">
           <div class="section-header">
-            <h2>So‘nggi Yordam So‘rovlari</h2>
+            <h2><i class="fa-solid fa-list-check mr-2"></i>So‘nggi Yordam So‘rovlari</h2>
             <a href="/admin/support" class="view-all">Barchasini Ko‘rish</a>
           </div>
-          
           <div class="support-requests-list">
             <% if (recentRequests.length === 0) { %>
               <div class="empty-state">
@@ -138,8 +95,8 @@
               </div>
             <% } else { %>
               <div class="table-responsive">
-                <table class="table table-hover">
-                  <thead>
+                <table class="table table-hover table-bordered bg-white rounded">
+                  <thead class="thead-light">
                     <tr>
                       <th>ID</th>
                       <th>Mijoz</th>
@@ -156,7 +113,7 @@
                         <td><code><%= request._id.toString().slice(-6) %></code></td>
                         <td>
                           <% if (request.customer) { %>
-                            <span class="customer-name"><%= request.customer.firstName %> <%= request.customer.lastName %></span>
+                            <span class="customer-name"><i class="fa-solid fa-user mr-1"></i><%= request.customer.firstName %> <%= request.customer.lastName %></span>
                           <% } else { %>
                             <span class="customer-name">Mijoz O‘chirilgan</span>
                           <% } %>
@@ -174,7 +131,7 @@
                         </td>
                         <td><%= new Date(request.createdAt).toLocaleDateString('uz-UZ') %></td>
                         <td>
-                          <a href="/admin/support/<%= request._id %>" class="btn btn-sm btn-outline-primary">Ko‘rish</a>
+                          <a href="/admin/support/<%= request._id %>" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-eye"></i> Ko‘rish</a>
                         </td>
                       </tr>
                     <% }) %>
@@ -187,9 +144,7 @@
       </div>
     </div>
   </div>
-  
   <%- include('../partials/admin-footer') %>
-  
   <script src="/js/main.js"></script>
 </body>
 </html>

@@ -188,21 +188,10 @@ router.get("/support", async (req, res) => {
     // Build filter (master can see all requests regardless of approval status)
     const filter = {}
 
-    if (status) {
-      filter.status = status
-    }
-
-    if (urgency) {
-      filter.urgency = urgency
-    }
-
-    if (deviceType) {
-      filter.deviceType = deviceType
-    }
-
-    if (approvalStatus) {
-      filter.approvalStatus = approvalStatus
-    }
+    if (status) filter.status = status
+    if (urgency) filter.urgency = urgency
+    if (deviceType) filter.deviceType = deviceType
+    if (approvalStatus) filter.approvalStatus = approvalStatus
 
     const supportRequests = await SupportRequest.find(filter)
       .sort({ createdAt: -1 })
@@ -214,7 +203,7 @@ router.get("/support", async (req, res) => {
       title: "All Support Requests",
       supportRequests,
       filters: { status, urgency, deviceType, approvalStatus },
-      user: req.session.user,
+      user: req.session.user || null, // Передаем user только если нужен (иначе null)
       currentPage: "support",
     })
   } catch (error) {

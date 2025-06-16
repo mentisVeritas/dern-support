@@ -89,6 +89,27 @@ async function seed() {
     await customer.save()
     console.log("👤 Created sample customer")
 
+    // Create custom admin user (по запросу)
+    const customAdminPassword = await bcrypt.hash("123456b", 10)
+    const customAdmin = new User({
+      email: "admin@admin.com",
+      password: customAdminPassword,
+      firstName: "Admin",
+      lastName: "Account",
+      accountType: "individual",
+      phone: "999-999-9999",
+      address: {
+        street: "Admin Street",
+        city: "Admin City",
+        state: "Admin State",
+        zipCode: "00000",
+        country: "Adminland",
+      },
+      isAdmin: true,
+    })
+    await customAdmin.save()
+    console.log("👤 Created custom admin user (admin@admin.com / 123456b)")
+
     // Add some sample pricing rules
     const pricingRules = [
       {
@@ -284,6 +305,7 @@ For professional network setup, contact our team.`,
     console.log("👑 Master: master@dern-support.com / master123")
     console.log("👤 Admin: admin@dern-support.com / admin123")
     console.log("👤 Customer: customer@example.com / customer123")
+    console.log("👤 Custom Admin: admin@admin.com / 123456b")
   } catch (error) {
     console.error("❌ Error seeding database:", error)
   } finally {
